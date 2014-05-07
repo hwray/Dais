@@ -7,8 +7,8 @@ class Globals extends Application {
 
 	private static Context context; 
 
-	private float mTimeLeft = 0; 
-	private float mTimeRight = 0; 
+	public float mTimeLeft = 0; 
+	public float mTimeRight = 0; 
 	
 	@Override
 	public void onCreate() {

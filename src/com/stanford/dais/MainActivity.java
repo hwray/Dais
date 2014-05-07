@@ -127,7 +127,6 @@ public class MainActivity extends Activity {
      */
     private void startPrepPresentation() {
         startActivity(new Intent(this, PrepPresentationActivity.class));
-        finish();
     }
 
     /**

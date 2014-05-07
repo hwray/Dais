@@ -31,6 +31,8 @@ import android.os.Build;
 
 public class PrepPresentationActivity extends Activity {
 
+	private Globals g; 
+	
 	private View mMainView; 
 	private TextView mTitleView; 
 	private TextView mHeadingView; 
@@ -41,7 +43,6 @@ public class PrepPresentationActivity extends Activity {
     private float mCenterHeading = 0; 
     
     private static final float TOO_STEEP_PITCH_DEGREES = 30.0f;
-    private boolean mTooSteep = false; 
     
     private GestureDetector mGestureDetector;
 	
@@ -61,6 +62,11 @@ public class PrepPresentationActivity extends Activity {
         		} else {
         			mTitleView.setText("Blowing it"); 
         		}
+            	if (orientation < mCenterHeading) {
+            		g.mTimeLeft += 1; 
+            	} else {
+            		g.mTimeRight += 1; 
+            	}
         	}
         }
 
@@ -80,6 +86,8 @@ public class PrepPresentationActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prep_presentation);
+        
+        Globals g = (Globals) getApplication(); 
         
         mMainView = (View) findViewById(R.id.prep_presentation_container); 
         mHeadingView = (TextView) findViewById(R.id.compass_heading); 
