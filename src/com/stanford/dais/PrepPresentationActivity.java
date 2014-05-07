@@ -38,6 +38,7 @@ public class PrepPresentationActivity extends Activity {
     private OrientationManager mOrientationManager;
     private float mLeftHeading = 0; 
     private float mRightHeading = 0; 
+    private float mCenterHeading = 0; 
     
     private static final float TOO_STEEP_PITCH_DEGREES = 30.0f;
     private boolean mTooSteep = false; 
@@ -115,6 +116,15 @@ public class PrepPresentationActivity extends Activity {
                     		mRightHeading = mOrientationManager.getHeading(); 
                     		TextView rightHeadingView = (TextView) mMainView.findViewById(R.id.right_heading); 
                     		rightHeadingView.setText("" + mRightHeading); 
+                    		
+                    		if (mRightHeading < mLeftHeading) {
+                    			float temp = mRightHeading; 
+                    			mRightHeading = mLeftHeading; 
+                    			mLeftHeading = temp; 
+                    		}
+                    		
+                    		mCenterHeading = (mLeftHeading + mRightHeading) / 2; 
+                    		
                     		mHeadingView.setText(""); 
                     	}
                         return true;
