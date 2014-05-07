@@ -87,7 +87,7 @@ public class PrepPresentationActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prep_presentation);
         
-        Globals g = (Globals) getApplication(); 
+        this.g = (Globals) getApplication(); 
         
         mMainView = (View) findViewById(R.id.prep_presentation_container); 
         mHeadingView = (TextView) findViewById(R.id.compass_heading); 
