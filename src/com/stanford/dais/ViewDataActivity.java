@@ -19,6 +19,4 @@ public class ViewDataActivity extends Activity {
         dataView.setText("Left: " + g.mTimeLeft + " Right: " + g.mTimeRight); 
         
     }
-
-	
 }
