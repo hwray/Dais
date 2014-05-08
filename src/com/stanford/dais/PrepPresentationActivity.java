@@ -58,7 +58,11 @@ public class PrepPresentationActivity extends Activity {
         	} else {
         		float orientation = orientationManager.getHeading(); 
         		if (orientation > mLeftHeading && orientation < mRightHeading) {
-        			mTitleView.setText("Great job"); 
+        			if (orientation < mCenterHeading) {
+        				mTitleView.setText("Left"); 
+        			} else {
+        				mTitleView.setText("Right");
+        			}
         		} else {
         			mTitleView.setText("Blowing it"); 
         		}
