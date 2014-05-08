@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<trigger command="GIVE_ME_FEEDBACK" />
+<trigger keyword="@string/my_voice_trigger" />

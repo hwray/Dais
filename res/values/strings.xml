@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <string name="glass_voice_trigger">prepare presentation</string>
+    <string name="my_voice_trigger">Present</string>
 
     <string name="app_name">Dais</string>
     <string name="hello_world">Hello world!</string>
