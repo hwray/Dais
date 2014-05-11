@@ -13,6 +13,7 @@ import android.widget.TextView;
 public class ViewDataActivity extends Activity {
 	
 	private Globals g; 
+	private View mainView; 
 	
 	private final int NUM_SEGMENTS = 25; 
 	private ArrayList<Double> segmentProportions; 
@@ -37,6 +38,8 @@ public class ViewDataActivity extends Activity {
             	}
             }
         });
+        
+       
                 
         countOrientationsBySegment(); 
         
@@ -77,19 +80,17 @@ public class ViewDataActivity extends Activity {
     	}
     }
     
-    
-    // Green if perfect
-    // Red if too much
-    // Blue if too little
+
     private void colorHeatmapSegment(int num) {
-    	String id = "heat_rect_" + num; 
-        int resID = ViewDataActivity.this.getResources().getIdentifier(id, null, getPackageName());
-        View rectView = (View) ViewDataActivity.this.findViewById(resID); 
+    	int idNum = num + 1; 
+    	String id = "heat_rect_" + idNum; 
+        int resID = this.getResources().getIdentifier(id, "id", getPackageName());
+        View rectView = this.findViewById(resID); 
         
         int redColor = (int)(segmentProportions.get(num) * (float)1000); 
         
-        rectView.setBackgroundColor(Color.rgb(redColor, 0, 0));
-        // calculate color
-        // set color
+        int color = Color.rgb(redColor, 0, 0); 
+        
+        rectView.setBackgroundColor(color);
     }
 }

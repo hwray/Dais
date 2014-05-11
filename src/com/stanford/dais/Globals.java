@@ -8,8 +8,6 @@ import android.content.Context;
 
 public class Globals extends Application {
 	
-	public float mTimeLeft = 0; 
-	public float mTimeRight = 0; 
 	public float mHeadingLeft = 0; 
 	public float mHeadingRight = 0; 
 	
@@ -18,6 +16,12 @@ public class Globals extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+	}
+	
+	public void clearGlobals() {
+		mHeadingLeft = 0; 
+		mHeadingRight = 0; 
+		orientations = new ArrayList<Float>(); 
 	}
 	
 }

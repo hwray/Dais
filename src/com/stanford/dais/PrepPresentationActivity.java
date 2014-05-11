@@ -61,11 +61,6 @@ public class PrepPresentationActivity extends Activity {
         		} else {
         			mTitleView.setText("Blowing it"); 
         		}
-            	if (orientation < mCenterHeading) {
-            		g.mTimeLeft += 1; 
-            	} else {
-            		g.mTimeRight += 1; 
-            	}
         	}
         }
 
