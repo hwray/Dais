@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/data_container"    
     android:layout_width="match_parent"
@@ -10,14 +10,106 @@
     tools:context="com.stanford.dais.ViewDataActivity"
     >
     
-    <TextView
-        android:id="@+id/data_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/no_data"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-    />
-    
+	<View
+	    android:id="@+id/heat_rect_1"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_2"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_3"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_4"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_5"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_6"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_7"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_8"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_9"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_10"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_11"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_12"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_13"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_14"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_15"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_16"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_17"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_18"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_19"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_20"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_21"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_22"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_23"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_24"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
+	<View
+	    android:id="@+id/heat_rect_25"
+ 		android:layout_weight=".1"
+ 		android:layout_height="match_parent" />
 
-</RelativeLayout>
+
+</LinearLayout>
