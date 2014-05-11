@@ -38,8 +38,6 @@ public class PrepPresentationActivity extends Activity {
 	private TextView mHeadingView; 
 	
     private OrientationManager mOrientationManager;
-    private float mLeftHeading = 0; 
-    private float mRightHeading = 0; 
     private float mCenterHeading = 0; 
     
     private static final float TOO_STEEP_PITCH_DEGREES = -10.0f;
@@ -51,14 +49,14 @@ public class PrepPresentationActivity extends Activity {
 
         @Override
         public void onOrientationChanged(OrientationManager orientationManager) {
-        	if (mLeftHeading == 0 || mRightHeading == 0) {
+        	if (g.mHeadingLeft == 0 || g.mHeadingRight == 0) {
             	mHeadingView.setText("" + orientationManager.getHeading());
         	} else if (orientationManager.getPitch() < TOO_STEEP_PITCH_DEGREES) {
         		mTitleView.setText("Look up!"); 
         	} else {
         		float orientation = orientationManager.getHeading(); 
         		g.orientations.add(orientation); 
-        		if (orientation > mLeftHeading && orientation < mRightHeading && !mTitleView.getText().equals("")) {
+        		if (orientation > g.mHeadingLeft && orientation < g.mHeadingRight) {
         			mTitleView.setText("");
         		} else {
         			mTitleView.setText("Blowing it"); 
@@ -116,23 +114,23 @@ public class PrepPresentationActivity extends Activity {
                 public boolean onGesture(Gesture gesture) {
                     if (gesture == Gesture.TAP) {
                         // mAudioManager.playSoundEffect(Sounds.TAP);
-                    	if (mLeftHeading == 0) {
-                    		mLeftHeading = mOrientationManager.getHeading(); 
+                    	if (g.mHeadingLeft == 0) {
+                    		g.mHeadingLeft = mOrientationManager.getHeading(); 
                     		TextView leftHeadingView = (TextView) mMainView.findViewById(R.id.left_heading); 
-                    		leftHeadingView.setText("" + mLeftHeading); 
+                    		leftHeadingView.setText("" + g.mHeadingLeft); 
                     		mTitleView.setText("Look at right side of room and tap"); 
-                    	} else if (mRightHeading == 0) {
-                    		mRightHeading = mOrientationManager.getHeading(); 
+                    	} else if (g.mHeadingRight == 0) {
+                    		g.mHeadingRight = mOrientationManager.getHeading(); 
                     		TextView rightHeadingView = (TextView) mMainView.findViewById(R.id.right_heading); 
-                    		rightHeadingView.setText("" + mRightHeading); 
+                    		rightHeadingView.setText("" + g.mHeadingRight); 
                     		
-                    		if (mRightHeading < mLeftHeading) {
-                    			float temp = mRightHeading; 
-                    			mRightHeading = mLeftHeading; 
-                    			mLeftHeading = temp; 
+                    		if (g.mHeadingRight < g.mHeadingLeft) {
+                    			float temp = g.mHeadingRight; 
+                    			g.mHeadingRight = g.mHeadingLeft; 
+                    			g.mHeadingLeft = temp; 
                     		}
                     		
-                    		mCenterHeading = (mLeftHeading + mRightHeading) / 2; 
+                    		mCenterHeading = (g.mHeadingLeft + g.mHeadingRight) / 2; 
                     		
                     		mHeadingView.setText(""); 
                     	}
