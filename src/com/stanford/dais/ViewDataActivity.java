@@ -1,5 +1,8 @@
 package com.stanford.dais; 
 
+import java.util.Collections;
+import java.util.Comparator;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -15,8 +18,19 @@ public class ViewDataActivity extends Activity {
         
         Globals g = (Globals) getApplication(); 
         
-        TextView dataView = (TextView) findViewById(R.id.data_title);
-        dataView.setText("Left: " + g.mTimeLeft + " Right: " + g.mTimeRight); 
+        Collections.sort(g.orientations, new Comparator<Float>() {
+            @Override
+            public int compare(Float orientation1, Float  orientation2)
+            {
+            	if (orientation1 < orientation2) {
+            		return -1; 
+            	} else if (orientation1 > orientation2) {
+            		return 1;
+            	} else {
+            		return 0; 
+            	}
+            }
+        });
         
     }
 }

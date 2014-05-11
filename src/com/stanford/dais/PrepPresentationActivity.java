@@ -42,7 +42,7 @@ public class PrepPresentationActivity extends Activity {
     private float mRightHeading = 0; 
     private float mCenterHeading = 0; 
     
-    private static final float TOO_STEEP_PITCH_DEGREES = 30.0f;
+    private static final float TOO_STEEP_PITCH_DEGREES = -10.0f;
     
     private GestureDetector mGestureDetector;
 	
@@ -53,16 +53,13 @@ public class PrepPresentationActivity extends Activity {
         public void onOrientationChanged(OrientationManager orientationManager) {
         	if (mLeftHeading == 0 || mRightHeading == 0) {
             	mHeadingView.setText("" + orientationManager.getHeading());
-        	} else if (Math.abs(orientationManager.getPitch()) > TOO_STEEP_PITCH_DEGREES) {
+        	} else if (orientationManager.getPitch() < TOO_STEEP_PITCH_DEGREES) {
         		mTitleView.setText("Look up!"); 
         	} else {
         		float orientation = orientationManager.getHeading(); 
-        		if (orientation > mLeftHeading && orientation < mRightHeading) {
-        			if (orientation < mCenterHeading) {
-        				mTitleView.setText("Left"); 
-        			} else {
-        				mTitleView.setText("Right");
-        			}
+        		g.orientations.add(orientation); 
+        		if (orientation > mLeftHeading && orientation < mRightHeading && !mTitleView.getText().equals("")) {
+        			mTitleView.setText("");
         		} else {
         			mTitleView.setText("Blowing it"); 
         		}
