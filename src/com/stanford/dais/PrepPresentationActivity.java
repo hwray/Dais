@@ -1,5 +1,6 @@
 package com.stanford.dais; 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.android.glass.media.Sounds;
@@ -40,7 +41,7 @@ public class PrepPresentationActivity extends Activity {
     private OrientationManager mOrientationManager;
     private float mCenterHeading = 0; 
     
-    private static final float TOO_STEEP_PITCH_DEGREES = -10.0f;
+    private static final float TOO_STEEP_PITCH_DEGREES = 10.0f;
     
     private GestureDetector mGestureDetector;
 	
@@ -51,7 +52,7 @@ public class PrepPresentationActivity extends Activity {
         public void onOrientationChanged(OrientationManager orientationManager) {
         	if (g.mHeadingLeft == 0 || g.mHeadingRight == 0) {
             	mHeadingView.setText("" + orientationManager.getHeading());
-        	} else if (orientationManager.getPitch() < TOO_STEEP_PITCH_DEGREES) {
+        	} else if (orientationManager.getPitch() > TOO_STEEP_PITCH_DEGREES) {
         		mTitleView.setText("Look up!"); 
         	} else {
         		float orientation = orientationManager.getHeading(); 
@@ -82,6 +83,10 @@ public class PrepPresentationActivity extends Activity {
         setContentView(R.layout.activity_prep_presentation);
         
         this.g = (Globals) getApplication(); 
+        
+        g.mHeadingLeft = 0; 
+        g.mHeadingRight = 0; 
+        g.orientations = new ArrayList<Float>(); 
         
         mMainView = (View) findViewById(R.id.prep_presentation_container); 
         mHeadingView = (TextView) findViewById(R.id.compass_heading); 
