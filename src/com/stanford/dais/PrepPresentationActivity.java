@@ -58,7 +58,7 @@ public class PrepPresentationActivity extends Activity {
         	if (pres.mLeftHeading == 0 || pres.mRightHeading == 0) {
             	mHeadingView.setText("" + orientationManager.getHeading());
         	} else if (Math.abs(orientationManager.getPitch()) > TOO_STEEP_PITCH_DEGREES) {
-        		mTitleView.setText("LOOK UP!"); 
+        		mTitleView.setText("Look Up!"); 
         	} else {
         		float orientation = orientationManager.getHeading();
         		pres.mCurrentHeading = orientation;
