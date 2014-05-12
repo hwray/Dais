@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/prep_presentation_container"    
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:layout_marginLeft="@dimen/card_margin"
+    android:layout_marginRight="@dimen/card_margin"
+    android:keepScreenOn="true" 
+    tools:context="com.stanford.dais.PrepPresentationActivity" >
+    
+    <TextView
+        android:id="@+id/instructions_and_feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/get_left_heading"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+    />
+    
+	<TextView
+        android:id="@+id/left_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="@dimen/tip_margin_bottom"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+    />
+	
+	<TextView
+        android:id="@+id/compass_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/tip_margin_bottom"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+    />
+	
+	<TextView
+        android:id="@+id/right_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/tip_margin_bottom"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+    />
+	
+    
+</RelativeLayout>

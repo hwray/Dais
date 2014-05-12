@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="my_voice_trigger">prep presentation</string>
+
+    <string name="app_name">Dais</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="main_subtitle">Presentation Analytics</string>
+    <string name="prep_presentation">Prep Presentation</string>
+    
+    <string name="view_data">View Data</string>
+    <string name="no_data">No Recent Data</string>
+    
+    <string name="get_left_heading">Look at left side of room and tap</string>
+    <string name="get_right_heading">Look at right side of room and tap</string>
+    
+
+</resources>
