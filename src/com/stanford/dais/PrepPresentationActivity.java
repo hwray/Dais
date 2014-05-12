@@ -1,5 +1,6 @@
 package com.stanford.dais; 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.android.glass.media.Sounds;
@@ -40,10 +41,11 @@ public class PrepPresentationActivity extends Activity {
 	private TextView mHeadingView; 
 	
     private OrientationManager mOrientationManager;
+
     
     private Presentation pres;
     
-    private static final float TOO_STEEP_PITCH_DEGREES = 30.0f;
+    private static final float TOO_STEEP_PITCH_DEGREES = 10.0f;
     
     private GestureDetector mGestureDetector;
     
@@ -95,6 +97,10 @@ public class PrepPresentationActivity extends Activity {
         
         this.g = (Globals) getApplication(); 
         
+        g.mHeadingLeft = 0; 
+        g.mHeadingRight = 0; 
+        g.orientations = new ArrayList<Float>(); 
+        
         mMainView = (View) findViewById(R.id.prep_presentation_container); 
         mHeadingView = (TextView) findViewById(R.id.compass_heading); 
         mTitleView = (TextView) findViewById(R.id.instructions_and_feedback); 
@@ -132,7 +138,7 @@ public class PrepPresentationActivity extends Activity {
                     		pres.mLeftHeading = mOrientationManager.getHeading(); 
                     		TextView leftHeadingView = (TextView) mMainView.findViewById(R.id.left_heading); 
                     		leftHeadingView.setText("" + pres.mLeftHeading); 
-                    		mTitleView.setText("LOOK at right side of room and tap"); 
+                    		mTitleView.setText("Look at right side of room and tap"); 
                     	} else if (pres.mRightHeading == 0) {
                     		pres.mRightHeading = mOrientationManager.getHeading(); 
                     		TextView rightHeadingView = (TextView) mMainView.findViewById(R.id.right_heading); 
