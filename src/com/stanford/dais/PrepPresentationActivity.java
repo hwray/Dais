@@ -29,6 +29,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.os.Build;
 
+import com.firebase.client.*;
+
 public class PrepPresentationActivity extends Activity {
 
 	private Globals g; 
@@ -38,36 +40,40 @@ public class PrepPresentationActivity extends Activity {
 	private TextView mHeadingView; 
 	
     private OrientationManager mOrientationManager;
-    private float mLeftHeading = 0; 
-    private float mRightHeading = 0; 
-    private float mCenterHeading = 0; 
+    
+    private Presentation pres;
     
     private static final float TOO_STEEP_PITCH_DEGREES = 30.0f;
     
     private GestureDetector mGestureDetector;
+    
+    /* FIREBASE GLOBALS */
+     Firebase connection;
 	
     private final OrientationManager.OnChangedListener mCompassListener =
             new OrientationManager.OnChangedListener() {
 
         @Override
         public void onOrientationChanged(OrientationManager orientationManager) {
-        	if (mLeftHeading == 0 || mRightHeading == 0) {
+        	if (pres.mLeftHeading == 0 || pres.mRightHeading == 0) {
             	mHeadingView.setText("" + orientationManager.getHeading());
         	} else if (Math.abs(orientationManager.getPitch()) > TOO_STEEP_PITCH_DEGREES) {
-        		mTitleView.setText("Look up!"); 
+        		mTitleView.setText("LOOK UP!"); 
         	} else {
-        		float orientation = orientationManager.getHeading(); 
-        		if (orientation > mLeftHeading && orientation < mRightHeading) {
+        		float orientation = orientationManager.getHeading();
+        		pres.mCurrentHeading = orientation;
+        		if (orientation > pres.mLeftHeading && orientation < pres.mRightHeading) {
         			mTitleView.setText("Great job"); 
         		} else {
         			mTitleView.setText("Blowing it"); 
         		}
-            	if (orientation < mCenterHeading) {
+            	if (orientation < pres.mCenterHeading) {
             		g.mTimeLeft += 1; 
             	} else {
             		g.mTimeRight += 1; 
             	}
         	}
+        	//connection.setValue(Float.valueOf(pres.mCenterHeading));
         }
 
         @Override
@@ -108,32 +114,42 @@ public class PrepPresentationActivity extends Activity {
     
     
     private GestureDetector createGestureDetector(Context context) {
+    	
+    	connection = new Firebase("https://dais.firebaseio.com/demo/presentation1"); // Firebase
+    	connection.setValue("Hello, World!");
+
+    	pres = new Presentation();
+    	
         GestureDetector gestureDetector = new GestureDetector(context);
             //Create a base listener for generic gestures
             gestureDetector.setBaseListener( new GestureDetector.BaseListener() {
                 @Override
                 public boolean onGesture(Gesture gesture) {
+                	
                     if (gesture == Gesture.TAP) {
                         // mAudioManager.playSoundEffect(Sounds.TAP);
-                    	if (mLeftHeading == 0) {
-                    		mLeftHeading = mOrientationManager.getHeading(); 
+                    	if (pres.mLeftHeading == 0) {
+                    		pres.mLeftHeading = mOrientationManager.getHeading(); 
                     		TextView leftHeadingView = (TextView) mMainView.findViewById(R.id.left_heading); 
-                    		leftHeadingView.setText("" + mLeftHeading); 
-                    		mTitleView.setText("Look at right side of room and tap"); 
-                    	} else if (mRightHeading == 0) {
-                    		mRightHeading = mOrientationManager.getHeading(); 
+                    		leftHeadingView.setText("" + pres.mLeftHeading); 
+                    		mTitleView.setText("LOOK at right side of room and tap"); 
+                    	} else if (pres.mRightHeading == 0) {
+                    		pres.mRightHeading = mOrientationManager.getHeading(); 
                     		TextView rightHeadingView = (TextView) mMainView.findViewById(R.id.right_heading); 
-                    		rightHeadingView.setText("" + mRightHeading); 
+                    		rightHeadingView.setText("" + pres.mRightHeading); 
                     		
-                    		if (mRightHeading < mLeftHeading) {
-                    			float temp = mRightHeading; 
-                    			mRightHeading = mLeftHeading; 
-                    			mLeftHeading = temp; 
+                    		if (pres.mRightHeading < pres.mLeftHeading) {
+                    			float temp = pres.mRightHeading; 
+                    			pres.mRightHeading = pres.mLeftHeading; 
+                    			pres.mLeftHeading = temp; 
                     		}
                     		
-                    		mCenterHeading = (mLeftHeading + mRightHeading) / 2; 
+                    		pres.mCenterHeading = (pres.mLeftHeading + pres.mRightHeading) / 2; 
                     		
                     		mHeadingView.setText(""); 
+                    		
+                    		//Firebase
+                    		//connection.setValue(pres.mCenterHeading);
                     	}
                         return true;
                     } else if (gesture == Gesture.TWO_TAP) {
@@ -145,6 +161,8 @@ public class PrepPresentationActivity extends Activity {
                     } else if (gesture == Gesture.SWIPE_LEFT) {
                         // do something on left (backwards) swipe
                         return true;
+                    } else if (gesture == Gesture.SWIPE_DOWN) {
+                    	connection.setValue(Float.valueOf(pres.mCenterHeading));
                     }
                     return false;
                 }
