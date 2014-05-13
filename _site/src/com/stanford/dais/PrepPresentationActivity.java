@@ -30,6 +30,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.os.Build;
 
+import com.firebase.client.*;
+
 public class PrepPresentationActivity extends Activity {
 
 	private Globals g; 
@@ -39,30 +41,36 @@ public class PrepPresentationActivity extends Activity {
 	private TextView mHeadingView; 
 	
     private OrientationManager mOrientationManager;
-    private float mCenterHeading = 0; 
     
     private static final float TOO_STEEP_PITCH_DEGREES = 10.0f;
     
     private GestureDetector mGestureDetector;
+    
+    /* FIREBASE GLOBALS */
+     Firebase connection;
+     Firebase testConnection;
 	
     private final OrientationManager.OnChangedListener mCompassListener =
             new OrientationManager.OnChangedListener() {
 
         @Override
         public void onOrientationChanged(OrientationManager orientationManager) {
-        	if (g.mHeadingLeft == 0 || g.mHeadingRight == 0) {
+        	if (g.pres.mLeftHeading == 0 || g.pres.mRightHeading == 0) {
             	mHeadingView.setText("" + orientationManager.getHeading());
-        	} else if (orientationManager.getPitch() > TOO_STEEP_PITCH_DEGREES) {
-        		mTitleView.setText("Look up!"); 
+        	} else if (Math.abs(orientationManager.getPitch()) > TOO_STEEP_PITCH_DEGREES) {
+        		mTitleView.setText("Look Up!"); 
         	} else {
-        		float orientation = orientationManager.getHeading(); 
-        		g.orientations.add(orientation); 
-        		if (orientation > g.mHeadingLeft && orientation < g.mHeadingRight) {
-        			mTitleView.setText("");
+        		float orientation = orientationManager.getHeading();
+        		g.pres.mCurrentHeading = orientation;
+        		g.pres.orientations.add(orientation);
+        		if (orientation > g.pres.mLeftHeading && orientation < g.pres.mRightHeading) {
+        			mTitleView.setText(""); 
         		} else {
         			mTitleView.setText("Blowing it"); 
         		}
+            	
         	}
+        	//connection.setValue(Float.valueOf(pres.mCenterHeading));
         }
 
         @Override
@@ -84,9 +92,9 @@ public class PrepPresentationActivity extends Activity {
         
         this.g = (Globals) getApplication(); 
         
-        g.mHeadingLeft = 0; 
-        g.mHeadingRight = 0; 
-        g.orientations = new ArrayList<Float>(); 
+        g.pres.mLeftHeading = 0; 
+        g.pres.mRightHeading = 0; 
+        g.pres.orientations = new ArrayList<Float>(); 
         
         mMainView = (View) findViewById(R.id.prep_presentation_container); 
         mHeadingView = (TextView) findViewById(R.id.compass_heading); 
@@ -107,32 +115,44 @@ public class PrepPresentationActivity extends Activity {
     
     
     private GestureDetector createGestureDetector(Context context) {
+    	
+    	connection = new Firebase("https://dais.firebaseio.com/demo/"); // Firebase
+    	connection.setValue("Hello, World!");
+    	testConnection = new Firebase("http://dais.firebaseio.com/testStatus");
+    	testConnection.setValue("creating new gesture");
+
+    	g.pres = new Presentation();
+    	
         GestureDetector gestureDetector = new GestureDetector(context);
             //Create a base listener for generic gestures
             gestureDetector.setBaseListener( new GestureDetector.BaseListener() {
                 @Override
                 public boolean onGesture(Gesture gesture) {
+                	
                     if (gesture == Gesture.TAP) {
                         // mAudioManager.playSoundEffect(Sounds.TAP);
-                    	if (g.mHeadingLeft == 0) {
-                    		g.mHeadingLeft = mOrientationManager.getHeading(); 
+                    	if (g.pres.mLeftHeading == 0) {
+                    		g.pres.mLeftHeading = mOrientationManager.getHeading(); 
                     		TextView leftHeadingView = (TextView) mMainView.findViewById(R.id.left_heading); 
-                    		leftHeadingView.setText("" + g.mHeadingLeft); 
+                    		leftHeadingView.setText("" + g.pres.mLeftHeading); 
                     		mTitleView.setText("Look at right side of room and tap"); 
-                    	} else if (g.mHeadingRight == 0) {
-                    		g.mHeadingRight = mOrientationManager.getHeading(); 
+                    	} else if (g.pres.mRightHeading == 0) {
+                    		g.pres.mRightHeading = mOrientationManager.getHeading(); 
                     		TextView rightHeadingView = (TextView) mMainView.findViewById(R.id.right_heading); 
-                    		rightHeadingView.setText("" + g.mHeadingRight); 
+                    		rightHeadingView.setText("" + g.pres.mRightHeading); 
                     		
-                    		if (g.mHeadingRight < g.mHeadingLeft) {
-                    			float temp = g.mHeadingRight; 
-                    			g.mHeadingRight = g.mHeadingLeft; 
-                    			g.mHeadingLeft = temp; 
+                    		if (g.pres.mRightHeading < g.pres.mLeftHeading) {
+                    			float temp = g.pres.mRightHeading; 
+                    			g.pres.mRightHeading = g.pres.mLeftHeading; 
+                    			g.pres.mLeftHeading = temp; 
                     		}
                     		
-                    		mCenterHeading = (g.mHeadingLeft + g.mHeadingRight) / 2; 
+                    		g.pres.mCenterHeading = (g.pres.mLeftHeading + g.pres.mRightHeading) / 2; 
                     		
                     		mHeadingView.setText(""); 
+                    		
+                    		//Firebase
+                    		//connection.setValue(pres.mCenterHeading);
                     	}
                         return true;
                     } else if (gesture == Gesture.TWO_TAP) {
@@ -144,6 +164,9 @@ public class PrepPresentationActivity extends Activity {
                     } else if (gesture == Gesture.SWIPE_LEFT) {
                         // do something on left (backwards) swipe
                         return true;
+                    } else if (gesture == Gesture.SWIPE_DOWN) {
+                    	connection.setValue(g.pres.toMap());
+                    	g.pres.reset();
                     }
                     return false;
                 }
