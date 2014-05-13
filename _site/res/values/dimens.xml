@@ -1,0 +1,15 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    
+    
+    <!-- The standard margin used on the top, left, and right sides of a card. -->
+    <dimen name="card_margin">40px</dimen>
+
+    <!-- The distance between the bottom of a card and the bottom of a tips-view, adjusted so
+         that the baseline of the text is 40px from the bottom of the card. -->
+    <dimen name="tip_margin_bottom">33px</dimen>
+
+</resources>

@@ -25,7 +25,7 @@ public class ViewDataActivity extends Activity {
         
         g = (Globals) getApplication(); 
         
-        Collections.sort(g.pres.orientations, new Comparator<Float>() {
+        Collections.sort(g.orientations, new Comparator<Float>() {
             @Override
             public int compare(Float orientation1, Float  orientation2)
             {
@@ -52,19 +52,19 @@ public class ViewDataActivity extends Activity {
     private void countOrientationsBySegment() {
     	ArrayList<Integer> segmentCounters = new ArrayList<Integer>(); 
     	segmentProportions = new ArrayList<Double>(); 
-    	int numOrientations = g.pres.orientations.size(); 
-    	float range = g.pres.mRightHeading - g.pres.mLeftHeading; 
+    	int numOrientations = g.orientations.size(); 
+    	float range = g.mHeadingRight - g.mHeadingLeft; 
     	
-    	float nextBreakpoint = g.pres.mLeftHeading + (range / NUM_SEGMENTS);
+    	float nextBreakpoint = g.mHeadingLeft + (range / NUM_SEGMENTS);
     	float nextBreakpointIndex = 1; 
     	int currCounter = 0; 
     	int totalCounter = 0; 
     	for (int i = 0; i < numOrientations; i++) {
-    		if (g.pres.orientations.get(i) > nextBreakpoint) {
+    		if (g.orientations.get(i) > nextBreakpoint) {
     			segmentCounters.add(currCounter); 
     			currCounter = 0; 
     			nextBreakpointIndex++; 
-    			nextBreakpoint = g.pres.mLeftHeading + ((float)nextBreakpointIndex * (range / (float)NUM_SEGMENTS)); 
+    			nextBreakpoint = g.mHeadingLeft + ((float)nextBreakpointIndex * (range / (float)NUM_SEGMENTS)); 
     		} else {
         		currCounter++; 
     		}
