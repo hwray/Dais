@@ -46,7 +46,7 @@ public class PrepPresentationActivity extends Activity {
 	private TextView mLeftHeadingView; 
 	private TextView mRightHeadingView; 
 
-    private static final float TOO_LONG_GAZE_TIME = 10.0f; 
+    private static final float TOO_LONG_GAZE_TIME = 100.0f; 
     private static final float TOO_STEEP_PITCH_DEGREES = 10.0f;
     
     private OrientationManager mOrientationManager;        
@@ -67,7 +67,9 @@ public class PrepPresentationActivity extends Activity {
 
         @Override
         public void onOrientationChanged(OrientationManager orientationManager) {
-        	// Do nothing
+        	if (g.pres.mLeftHeading == 0 || g.pres.mRightHeading == 0) {
+            	mHeadingView.setText("" + mOrientationManager.getHeading());
+        	}
         }
 
         @Override
@@ -169,9 +171,18 @@ public class PrepPresentationActivity extends Activity {
     	uiHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				String message = (String)msg.obj; 
-				if (message != null) {
-				
+				if (msg.what == 0) {
+					mHeadingView.setText("Magnetic interference");
+				} else if (msg.what == 1) {
+	        		mTitleView.setText("Look up!"); 
+				} else if (msg.what == 2) {
+    				mTitleView.setText("Look right!"); 
+				} else if (msg.what == 3) {
+    				mTitleView.setText("Look left!");
+				} else if (msg.what == 4) {
+					mTitleView.setText("Face forward!"); 
+				} else if (msg.what == 5) {
+					mTitleView.setText(""); 
 				}
 			}
     	}; 
@@ -201,16 +212,13 @@ public class PrepPresentationActivity extends Activity {
 				while (true) {
 					try {
 						if (mInterference) {
-							mHeadingView.setText("Magnetic interference");
-							continue; 
+							sendUIMessage(0); 
+							//Thread.sleep(100); 
+							//continue; 
 						}
-						
-			        	if (g.pres.mLeftHeading == 0 || g.pres.mRightHeading == 0) {
-			            	mHeadingView.setText("" + mOrientationManager.getHeading());
-			        	}
 			        	
 			        	if (mOrientationManager.getPitch() > TOO_STEEP_PITCH_DEGREES) {
-			        		mTitleView.setText("Look up!"); 
+			        		sendUIMessage(1);
 			        	} else {
 			        		float heading = mOrientationManager.getHeading(); 
 			        		g.pres.headings.add(heading); 
@@ -223,9 +231,9 @@ public class PrepPresentationActivity extends Activity {
 			        			g.pres.mGazeTime += 1; 
 			        			
 			        			if (g.pres.mGazeTime > TOO_LONG_GAZE_TIME) {
-			        				mTitleView.setText("Look right!"); 
+			        				sendUIMessage(2);
 			        			} else {
-				        			mTitleView.setText("");
+			        				sendUIMessage(5); 
 			        			}
 			        			
 			        			g.pres.mLeftTime += 1; 
@@ -237,16 +245,16 @@ public class PrepPresentationActivity extends Activity {
 			        			}
 			        			g.pres.mGazeTime += 1; 
 			        			
-			        			if (g.pres.mGazeTime < TOO_LONG_GAZE_TIME) {
-			        				mTitleView.setText("Look left!");
+			        			if (g.pres.mGazeTime > TOO_LONG_GAZE_TIME) {
+			        				sendUIMessage(3); 
 			        			} else {
-			        				mTitleView.setText(""); 
+			        				sendUIMessage(5); 
 			        			}
 			        			
 			        			g.pres.mRightTime += 1; 
 			        		} 
 			        		else {
-			        			mTitleView.setText("Blowing it"); 
+			        			sendUIMessage(4); 
 			        		}
 			        	}
 						
@@ -259,4 +267,10 @@ public class PrepPresentationActivity extends Activity {
 		};
 		mGazeThread.start(); 
     }
+    
+    public void sendUIMessage(int msg) {
+		Message message = uiHandler.obtainMessage(); 
+		message.what = msg; 
+		uiHandler.sendMessage(message);
+	}
 }
