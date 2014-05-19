@@ -41,39 +41,30 @@ public class PrepPresentationActivity extends Activity {
 	private View mMainView; 
 	private TextView mTitleView; 
 	private TextView mHeadingView; 
-<<<<<<< HEAD
+
 	private TextView mLeftHeadingView; 
 	private TextView mRightHeadingView; 
 
     private static final float TOO_LONG_GAZE_TIME = 10.0f; 
-=======
-	
-    private OrientationManager mOrientationManager;
-    
->>>>>>> 4034a14de75fe5c4a4fc57167cc9889d8b14ef84
     private static final float TOO_STEEP_PITCH_DEGREES = 10.0f;
     
-    private OrientationManager mOrientationManager;
+    private OrientationManager mOrientationManager;        
     private boolean mInterference; 
     
     private GestureDetector mGestureDetector;
     
-<<<<<<< HEAD
     private Thread mGazeThread;  
-=======
+
     /* FIREBASE GLOBALS */
      Firebase connection;
      Firebase testConnection;
->>>>>>> 4034a14de75fe5c4a4fc57167cc9889d8b14ef84
 	
     private final OrientationManager.OnChangedListener mCompassListener =
             new OrientationManager.OnChangedListener() {
 
         @Override
         public void onOrientationChanged(OrientationManager orientationManager) {
-<<<<<<< HEAD
         	// Do nothing
-=======
         	if (g.pres.mLeftHeading == 0 || g.pres.mRightHeading == 0) {
             	mHeadingView.setText("" + orientationManager.getHeading());
         	} else if (Math.abs(orientationManager.getPitch()) > TOO_STEEP_PITCH_DEGREES) {
@@ -90,7 +81,6 @@ public class PrepPresentationActivity extends Activity {
             	
         	}
         	//connection.setValue(Float.valueOf(pres.mCenterHeading));
->>>>>>> 4034a14de75fe5c4a4fc57167cc9889d8b14ef84
         }
 
         @Override
@@ -111,14 +101,11 @@ public class PrepPresentationActivity extends Activity {
         
         this.g = (Globals) getApplication(); 
         
-<<<<<<< HEAD
         g.clearGlobals(); 
         mInterference = false; 
-=======
         g.pres.mLeftHeading = 0; 
         g.pres.mRightHeading = 0; 
         g.pres.orientations = new ArrayList<Float>(); 
->>>>>>> 4034a14de75fe5c4a4fc57167cc9889d8b14ef84
         
         mMainView = (View) findViewById(R.id.prep_presentation_container); 
         mHeadingView = (TextView) findViewById(R.id.compass_heading); 
@@ -159,14 +146,12 @@ public class PrepPresentationActivity extends Activity {
                 	
                     if (gesture == Gesture.TAP) {
                         // mAudioManager.playSoundEffect(Sounds.TAP);
-<<<<<<< HEAD
                     	if (g.mHeadingLeft == 0) {
                     		g.mHeadingLeft = mOrientationManager.getHeading(); 
                     		mLeftHeadingView.setText("" + g.mHeadingLeft); 
                     		mTitleView.setText("Look at right side of room and tap"); 
                     	} else if (g.mHeadingRight == 0) {
                     		g.mHeadingRight = mOrientationManager.getHeading(); 
-=======
                     	if (g.pres.mLeftHeading == 0) {
                     		g.pres.mLeftHeading = mOrientationManager.getHeading(); 
                     		TextView leftHeadingView = (TextView) mMainView.findViewById(R.id.left_heading); 
@@ -175,32 +160,24 @@ public class PrepPresentationActivity extends Activity {
                     	} else if (g.pres.mRightHeading == 0) {
                     		g.pres.mRightHeading = mOrientationManager.getHeading(); 
                     		TextView rightHeadingView = (TextView) mMainView.findViewById(R.id.right_heading); 
-                    		rightHeadingView.setText("" + g.pres.mRightHeading); 
->>>>>>> 4034a14de75fe5c4a4fc57167cc9889d8b14ef84
-                    		
+                    		rightHeadingView.setText("" + g.pres.mRightHeading);                     		
                     		if (g.pres.mRightHeading < g.pres.mLeftHeading) {
                     			float temp = g.pres.mRightHeading; 
                     			g.pres.mRightHeading = g.pres.mLeftHeading; 
                     			g.pres.mLeftHeading = temp; 
                     		}
                     		
-<<<<<<< HEAD
                     		g.mHeadingCenter = (g.mHeadingLeft + g.mHeadingRight) / 2; 
-=======
                     		g.pres.mCenterHeading = (g.pres.mLeftHeading + g.pres.mRightHeading) / 2; 
->>>>>>> 4034a14de75fe5c4a4fc57167cc9889d8b14ef84
                     		
                     		mLeftHeadingView.setText("");
                     		mRightHeadingView.setText("");
                     		mHeadingView.setText(""); 
-<<<<<<< HEAD
                   	}
-=======
                     		
                     		//Firebase
                     		//connection.setValue(pres.mCenterHeading);
                     	}
->>>>>>> 4034a14de75fe5c4a4fc57167cc9889d8b14ef84
                         return true;
                     } else if (gesture == Gesture.TWO_TAP) {
                         // do something on two finger tap
