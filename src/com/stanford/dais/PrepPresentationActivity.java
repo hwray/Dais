@@ -23,6 +23,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -54,6 +55,8 @@ public class PrepPresentationActivity extends Activity {
     private GestureDetector mGestureDetector;
     
     private Thread mGazeThread;  
+    
+    private Handler uiHandler; 
 
     /* FIREBASE GLOBALS */
      Firebase connection;
@@ -106,8 +109,8 @@ public class PrepPresentationActivity extends Activity {
         mOrientationManager.addOnChangedListener(mCompassListener);
         mOrientationManager.start();
         
+        initHandler(); 
         //initFirebase(); 
-        //initGazeThread(); 
     }
     
     
@@ -160,6 +163,18 @@ public class PrepPresentationActivity extends Activity {
         	 }
         });
         return gestureDetector;
+    }
+    
+    public void initHandler() {
+    	uiHandler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				String message = (String)msg.obj; 
+				if (message != null) {
+				
+				}
+			}
+    	}; 
     }
     
     public void initFirebase() {
