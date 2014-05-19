@@ -64,7 +64,7 @@ public class PrepPresentationActivity extends Activity {
 
         @Override
         public void onOrientationChanged(OrientationManager orientationManager) {
-        
+        	// Do nothing
         }
 
         @Override
@@ -106,14 +106,12 @@ public class PrepPresentationActivity extends Activity {
         mOrientationManager.addOnChangedListener(mCompassListener);
         mOrientationManager.start();
         
-        initFirebase(); 
-        initGazeThread(); 
+        //initFirebase(); 
+        //initGazeThread(); 
     }
     
     
-    private GestureDetector createGestureDetector(Context context) {
-    	g.pres = new Presentation();
-    	
+    private GestureDetector createGestureDetector(Context context) {    	
         GestureDetector gestureDetector = new GestureDetector(context);
             //Create a base listener for generic gestures
         gestureDetector.setBaseListener( new GestureDetector.BaseListener() {
@@ -128,15 +126,7 @@ public class PrepPresentationActivity extends Activity {
                  		mTitleView.setText("Look at right side of room and tap"); 
                  	} else if (g.pres.mRightHeading == 0) {
                  		g.pres.mRightHeading = mOrientationManager.getHeading(); 
-                 	if (g.pres.mLeftHeading == 0) {
-                 		g.pres.mLeftHeading = mOrientationManager.getHeading(); 
-                 		TextView leftHeadingView = (TextView) mMainView.findViewById(R.id.left_heading); 
-                 		leftHeadingView.setText("" + g.pres.mLeftHeading); 
-                 		mTitleView.setText("Look at right side of room and tap"); 
-                 	} else if (g.pres.mRightHeading == 0) {
-                 		g.pres.mRightHeading = mOrientationManager.getHeading(); 
-                 		TextView rightHeadingView = (TextView) mMainView.findViewById(R.id.right_heading); 
-                 		rightHeadingView.setText("" + g.pres.mRightHeading);                     		
+                 		                 		
                  		if (g.pres.mRightHeading < g.pres.mLeftHeading) {
                  			float temp = g.pres.mRightHeading; 
                  			g.pres.mRightHeading = g.pres.mLeftHeading; 
@@ -144,14 +134,15 @@ public class PrepPresentationActivity extends Activity {
                  		}
                  		
                  		g.pres.mCenterHeading = (g.pres.mLeftHeading + g.pres.mRightHeading) / 2; 
-                 		g.pres.mCenterHeading = (g.pres.mLeftHeading + g.pres.mRightHeading) / 2; 
                  		
+                 		mTitleView.setText(""); 
                  		mLeftHeadingView.setText("");
                  		mRightHeadingView.setText("");
                  		mHeadingView.setText(""); 
+                 		
+                 		initGazeThread(); 
                  	}
-                 }
-                     return true;
+                    return true;
                  } else if (gesture == Gesture.TWO_TAP) {
                      // do something on two finger tap
                      return true;
@@ -162,8 +153,8 @@ public class PrepPresentationActivity extends Activity {
                      // do something on left (backwards) swipe
                      return true;
                  } else if (gesture == Gesture.SWIPE_DOWN) {
-                 	connection.setValue(g.pres.toMap());
-                 	g.pres.reset();
+                 	//connection.setValue(g.pres.toMap());
+                 	//g.pres.reset();
                  }
                  return false;
         	 }
