@@ -48,7 +48,6 @@ public class PrepPresentationActivity extends Activity {
     
     /* FIREBASE GLOBALS */
      Firebase connection;
-     Firebase testConnection;
 	
     private final OrientationManager.OnChangedListener mCompassListener =
             new OrientationManager.OnChangedListener() {
@@ -117,11 +116,8 @@ public class PrepPresentationActivity extends Activity {
     private GestureDetector createGestureDetector(Context context) {
     	
     	connection = new Firebase("https://dais.firebaseio.com/demo/"); // Firebase
-    	connection.setValue("Hello, World!");
-    	testConnection = new Firebase("http://dais.firebaseio.com/testStatus");
-    	testConnection.setValue("creating new gesture");
 
-    	g.pres = new Presentation();
+    	g.pres = new Presentation(new Firebase("https://dais.firebaseio.com/demo"));
     	
         GestureDetector gestureDetector = new GestureDetector(context);
             //Create a base listener for generic gestures
@@ -150,9 +146,6 @@ public class PrepPresentationActivity extends Activity {
                     		g.pres.mCenterHeading = (g.pres.mLeftHeading + g.pres.mRightHeading) / 2; 
                     		
                     		mHeadingView.setText(""); 
-                    		
-                    		//Firebase
-                    		//connection.setValue(pres.mCenterHeading);
                     	}
                         return true;
                     } else if (gesture == Gesture.TWO_TAP) {
@@ -165,8 +158,7 @@ public class PrepPresentationActivity extends Activity {
                         // do something on left (backwards) swipe
                         return true;
                     } else if (gesture == Gesture.SWIPE_DOWN) {
-                    	connection.setValue(g.pres.toMap());
-                    	g.pres.reset();
+                    	g.pres.pushOnline();
                     }
                     return false;
                 }

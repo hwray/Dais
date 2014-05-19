@@ -13,11 +13,10 @@ public class Globals extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		pres = new Presentation();
 	}
 	
 	public void clearGlobals() {
-		pres = new Presentation();
+		
 	}
 	
 }
