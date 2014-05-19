@@ -3,6 +3,8 @@ package com.stanford.dais;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.Header;
+
 import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
@@ -21,6 +23,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,13 +42,22 @@ public class PrepPresentationActivity extends Activity {
 	private View mMainView; 
 	private TextView mTitleView; 
 	private TextView mHeadingView; 
-	
-    private OrientationManager mOrientationManager;
-    
+
+	private TextView mLeftHeadingView; 
+	private TextView mRightHeadingView; 
+
+    private static final float TOO_LONG_GAZE_TIME = 100.0f; 
     private static final float TOO_STEEP_PITCH_DEGREES = 10.0f;
+    
+    private OrientationManager mOrientationManager;        
+    private boolean mInterference; 
     
     private GestureDetector mGestureDetector;
     
+    private Thread mGazeThread;  
+    
+    private Handler uiHandler; 
+
     /* FIREBASE GLOBALS */
      Firebase connection;
 	
@@ -55,21 +67,8 @@ public class PrepPresentationActivity extends Activity {
         @Override
         public void onOrientationChanged(OrientationManager orientationManager) {
         	if (g.pres.mLeftHeading == 0 || g.pres.mRightHeading == 0) {
-            	mHeadingView.setText("" + orientationManager.getHeading());
-        	} else if (Math.abs(orientationManager.getPitch()) > TOO_STEEP_PITCH_DEGREES) {
-        		mTitleView.setText("Look Up!"); 
-        	} else {
-        		float orientation = orientationManager.getHeading();
-        		g.pres.mCurrentHeading = orientation;
-        		g.pres.orientations.add(orientation);
-        		if (orientation > g.pres.mLeftHeading && orientation < g.pres.mRightHeading) {
-        			mTitleView.setText(""); 
-        		} else {
-        			mTitleView.setText("Blowing it"); 
-        		}
-            	
+            	mHeadingView.setText("" + mOrientationManager.getHeading());
         	}
-        	//connection.setValue(Float.valueOf(pres.mCenterHeading));
         }
 
         @Override
@@ -79,8 +78,7 @@ public class PrepPresentationActivity extends Activity {
 
         @Override
         public void onAccuracyChanged(OrientationManager orientationManager) {
-            //mInterference = orientationManager.hasInterference();
-            //updateTipsView();
+            mInterference = orientationManager.hasInterference();
         }
     };
     
@@ -91,13 +89,14 @@ public class PrepPresentationActivity extends Activity {
         
         this.g = (Globals) getApplication(); 
         
-        g.pres.mLeftHeading = 0; 
-        g.pres.mRightHeading = 0; 
-        g.pres.orientations = new ArrayList<Float>(); 
+        g.clearGlobals(); 
+        mInterference = false; 
         
         mMainView = (View) findViewById(R.id.prep_presentation_container); 
         mHeadingView = (TextView) findViewById(R.id.compass_heading); 
         mTitleView = (TextView) findViewById(R.id.instructions_and_feedback); 
+        mLeftHeadingView = (TextView) findViewById(R.id.left_heading); 
+        mRightHeadingView = (TextView) findViewById(R.id.right_heading); 
         
         mGestureDetector = createGestureDetector(this); 
         
@@ -110,61 +109,91 @@ public class PrepPresentationActivity extends Activity {
         
         mOrientationManager.addOnChangedListener(mCompassListener);
         mOrientationManager.start();
+        
+        initHandler(); 
+        //initFirebase(); 
     }
     
     
-    private GestureDetector createGestureDetector(Context context) {
-    	
-    	connection = new Firebase("https://dais.firebaseio.com/demo/"); // Firebase
-
-    	g.pres = new Presentation(new Firebase("https://dais.firebaseio.com/demo"));
-    	
+    private GestureDetector createGestureDetector(Context context) {    	
         GestureDetector gestureDetector = new GestureDetector(context);
             //Create a base listener for generic gestures
-            gestureDetector.setBaseListener( new GestureDetector.BaseListener() {
-                @Override
-                public boolean onGesture(Gesture gesture) {
-                	
-                    if (gesture == Gesture.TAP) {
-                        // mAudioManager.playSoundEffect(Sounds.TAP);
-                    	if (g.pres.mLeftHeading == 0) {
-                    		g.pres.mLeftHeading = mOrientationManager.getHeading(); 
-                    		TextView leftHeadingView = (TextView) mMainView.findViewById(R.id.left_heading); 
-                    		leftHeadingView.setText("" + g.pres.mLeftHeading); 
-                    		mTitleView.setText("Look at right side of room and tap"); 
-                    	} else if (g.pres.mRightHeading == 0) {
-                    		g.pres.mRightHeading = mOrientationManager.getHeading(); 
-                    		TextView rightHeadingView = (TextView) mMainView.findViewById(R.id.right_heading); 
-                    		rightHeadingView.setText("" + g.pres.mRightHeading); 
-                    		
-                    		if (g.pres.mRightHeading < g.pres.mLeftHeading) {
-                    			float temp = g.pres.mRightHeading; 
-                    			g.pres.mRightHeading = g.pres.mLeftHeading; 
-                    			g.pres.mLeftHeading = temp; 
-                    		}
-                    		
-                    		g.pres.mCenterHeading = (g.pres.mLeftHeading + g.pres.mRightHeading) / 2; 
-                    		
-                    		mHeadingView.setText(""); 
-                    	}
-                        return true;
-                    } else if (gesture == Gesture.TWO_TAP) {
-                        // do something on two finger tap
-                        return true;
-                    } else if (gesture == Gesture.SWIPE_RIGHT) {
-                        // do something on right (forward) swipe
-                        return true;
-                    } else if (gesture == Gesture.SWIPE_LEFT) {
-                        // do something on left (backwards) swipe
-                        return true;
-                    } else if (gesture == Gesture.SWIPE_DOWN) {
-                    	g.pres.pushOnline();
-                    }
-                    return false;
-                }
-            });
-            return gestureDetector;
-        }
+        gestureDetector.setBaseListener( new GestureDetector.BaseListener() {
+        	 @Override
+             public boolean onGesture(Gesture gesture) {
+             	
+                 if (gesture == Gesture.TAP) {
+                     // mAudioManager.playSoundEffect(Sounds.TAP);
+                 	if (g.pres.mLeftHeading == 0) {
+                 		g.pres.mLeftHeading = mOrientationManager.getHeading(); 
+                 		mLeftHeadingView.setText("" + g.pres.mLeftHeading); 
+                 		mTitleView.setText("Look at right side of room and tap"); 
+                 	} else if (g.pres.mRightHeading == 0) {
+                 		g.pres.mRightHeading = mOrientationManager.getHeading(); 
+                 		                 		
+                 		if (g.pres.mRightHeading < g.pres.mLeftHeading) {
+                 			float temp = g.pres.mRightHeading; 
+                 			g.pres.mRightHeading = g.pres.mLeftHeading; 
+                 			g.pres.mLeftHeading = temp; 
+                 		}
+                 		
+                 		g.pres.mCenterHeading = (g.pres.mLeftHeading + g.pres.mRightHeading) / 2; 
+                 		
+                 		mTitleView.setText(""); 
+                 		mLeftHeadingView.setText("");
+                 		mRightHeadingView.setText("");
+                 		mHeadingView.setText(""); 
+                 		
+                 		initGazeThread(); 
+                 	}
+                    return true;
+                 } else if (gesture == Gesture.TWO_TAP) {
+                     // do something on two finger tap
+                     return true;
+                 } else if (gesture == Gesture.SWIPE_RIGHT) {
+                     // do something on right (forward) swipe
+                     return true;
+                 } else if (gesture == Gesture.SWIPE_LEFT) {
+                     // do something on left (backwards) swipe
+                     return true;
+                 } else if (gesture == Gesture.SWIPE_DOWN) {
+                 	//connection.setValue(g.pres.toMap());
+                 	//g.pres.reset();
+                 }
+                 return false;
+        	 }
+        });
+        return gestureDetector;
+    }
+    
+    public void initHandler() {
+    	uiHandler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				if (msg.what == 0) {
+					mHeadingView.setText("Magnetic interference");
+				} else if (msg.what == 1) {
+	        		mTitleView.setText("Look up!"); 
+				} else if (msg.what == 2) {
+    				mTitleView.setText("Look right!"); 
+				} else if (msg.what == 3) {
+    				mTitleView.setText("Look left!");
+				} else if (msg.what == 4) {
+					mTitleView.setText("Face forward!"); 
+				} else if (msg.what == 5) {
+					mTitleView.setText(""); 
+				}
+			}
+    	}; 
+    }
+    
+    public void initFirebase() {
+    	connection = new Firebase("https://dais.firebaseio.com/demo/"); // Firebase
+
+    	connection.setValue("Hello, World!");
+    	testConnection = new Firebase("http://dais.firebaseio.com/testStatus");
+    	testConnection.setValue("creating new gesture");
+    }
     
     /*
      * Send generic motion events to the gesture detector
@@ -177,5 +206,71 @@ public class PrepPresentationActivity extends Activity {
         return false;
     }
 
-	
+    private void initGazeThread() {
+		mGazeThread = new Thread() {
+			public void run() {
+				while (true) {
+					try {
+						if (mInterference) {
+							sendUIMessage(0); 
+							//Thread.sleep(100); 
+							//continue; 
+						}
+			        	
+			        	if (mOrientationManager.getPitch() > TOO_STEEP_PITCH_DEGREES) {
+			        		sendUIMessage(1);
+			        	} else {
+			        		float heading = mOrientationManager.getHeading(); 
+			        		g.pres.headings.add(heading); 
+			        		
+			        		if (heading > g.pres.mLeftHeading && heading < g.pres.mCenterHeading) {
+			        			if (g.pres.mGazeSide != 0) {
+				        			g.pres.mGazeSide = 0; 
+			        				g.pres.mGazeTime = 0; 
+			        			}
+			        			g.pres.mGazeTime += 1; 
+			        			
+			        			if (g.pres.mGazeTime > TOO_LONG_GAZE_TIME) {
+			        				sendUIMessage(2);
+			        			} else {
+			        				sendUIMessage(5); 
+			        			}
+			        			
+			        			g.pres.mLeftTime += 1; 
+			        		} 
+			        		else if (heading > g.pres.mCenterHeading && heading < g.pres.mRightHeading) {
+			        			if (g.pres.mGazeSide != 1) {
+				        			g.pres.mGazeSide = 1; 
+				        			g.pres.mGazeTime = 0; 
+			        			}
+			        			g.pres.mGazeTime += 1; 
+			        			
+			        			if (g.pres.mGazeTime > TOO_LONG_GAZE_TIME) {
+			        				sendUIMessage(3); 
+			        			} else {
+			        				sendUIMessage(5); 
+			        			}
+			        			
+			        			g.pres.mRightTime += 1; 
+			        		} 
+			        		else {
+			        			sendUIMessage(4); 
+			        		}
+			        	}
+						
+						Thread.sleep(100);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		};
+		mGazeThread.start(); 
+    }
+    
+    public void sendUIMessage(int msg) {
+		Message message = uiHandler.obtainMessage(); 
+		message.what = msg; 
+		uiHandler.sendMessage(message);
+	}
 }

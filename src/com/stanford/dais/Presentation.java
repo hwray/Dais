@@ -7,17 +7,23 @@ import com.firebase.client.*;
 
 public class Presentation {
 	
-	public float mLeftHeading;
-	public float mRightHeading;
+	public float mLeftHeading; 
+	public float mRightHeading; 
 	public float mCenterHeading;
 	public ArrayList<Float> orientations;
 	private Firebase connection;
 	
+	public float mLeftTime; 
+	public float mRightTime;  
+	
+	public float mGazeTime;  
+	public int mGazeSide;  
+		
 	// Demo - Does not save all headings
 	public float mCurrentHeading;
 	
 	// Real Talk
-	private ArrayList<Float> headings; 
+	public ArrayList<Float> headings; 
 	
 	public Presentation(Firebase connection) {
 		mLeftHeading = 0;
@@ -25,17 +31,22 @@ public class Presentation {
 		mCenterHeading = 0;
 		orientations = new ArrayList<Float>();
 		this.connection = connection;
+		mLeftTime = 0; 
+		mRightTime = 0; 
+		mGazeTime = 0; 
+		mGazeSide = 0; 
+		headings = new ArrayList<Float>();
 	}
 	
 	public void reset() {
 		mLeftHeading = 0;
 		mRightHeading = 0;
 		mCenterHeading = 0;
-		orientations = new ArrayList<Float>();
-	}
-	
-	public void addHeading(float newHeading) {
-		headings.add(newHeading);
+		mLeftTime = 0; 
+		mRightTime = 0; 
+		mGazeTime = 0; 
+		mGazeSide = 0; 
+		headings = new ArrayList<Float>();
 	}
 	
 	public Map<String, Presentation> toMap() {
