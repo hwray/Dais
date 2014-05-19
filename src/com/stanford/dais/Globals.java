@@ -19,10 +19,13 @@ public class Globals extends Application {
 	public int mGazeSide = 0; 
 	
 	public ArrayList<Float> orientations = new ArrayList<Float>(); 
+
+	public Presentation pres; 
 		
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		pres = new Presentation();
 	}
 	
 	public void clearGlobals() {
@@ -33,6 +36,7 @@ public class Globals extends Application {
 		mTimeRight = 0; 
 		mGazeTime = 0; 
 		orientations = new ArrayList<Float>(); 
+		pres = new Presentation();
 	}
 	
 }
