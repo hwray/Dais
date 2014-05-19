@@ -3,10 +3,17 @@
   <title></title>
 </head>
 <body>
-  <div class="example_div" id="0"></div><div class="example_div" id="1"></div><div class="example_div" id="2"></div><div class="example_div" id="3"></div><div class="example_div" id="4"></div><div class="example_div" id="5"></div><div class="example_div" id="6"></div><div class="example_div" id="7"></div><div class="example_div" id="8"></div><div class="example_div" id="9"></div><div class="example_div" id="10"></div><div class="example_div" id="11"></div><div class="example_div" id="12"></div><div class="example_div" id="13"></div><div class="example_div" id="14"></div><div class="example_div" id="15"></div><div class="example_div" id="16"></div><div class="example_div" id="17"></div><div class="example_div" id="18"></div><div class="example_div" id="19"></div><div class="example_div" id="20"></div><div class="example_div" id="21"></div><div class="example_div" id="22"></div><div class="example_div" id="23"></div><div class="example_div" id="24"></div>
 <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.11/firebase.js'></script>
+<script type="text/javascript" src="js/Presentation.js"></script>
 <script>
-testRef = new Firebase("https://dais.firebaseio.com/demo/presentation");
+demoRef = new Firebase("https://dais.firebaseio.com/demo");
+demoRef.on("value", function(snapshot) {
+  presentations = snapshot.val();
+  for (var key in presentations) {
+    newPres = new Presentation(presentations[key]);
+  }
+});
+
 </script>
 
 </body>

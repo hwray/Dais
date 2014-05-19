@@ -1,0 +1,12 @@
+.heat-map {
+  height: 200px;
+  width: 300px;
+  padding: 10px;
+}
+
+.heat-map > .heat-bar {
+  height: 200px;
+  max-height: 100%;
+  width: 4%;
+  float: left;
+}
