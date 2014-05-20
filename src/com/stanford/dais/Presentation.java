@@ -18,6 +18,8 @@ public class Presentation {
 	
 	public float mGazeTime;  
 	public int mGazeSide;  
+	
+	public int numSteps; 
 		
 	// Demo - Does not save all headings
 	public float mCurrentHeading;
@@ -35,6 +37,7 @@ public class Presentation {
 		mRightTime = 0; 
 		mGazeTime = 0; 
 		mGazeSide = 0; 
+		numSteps = 0; 
 		headings = new ArrayList<Float>();
 	}
 	

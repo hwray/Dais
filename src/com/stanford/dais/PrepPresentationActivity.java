@@ -47,7 +47,7 @@ public class PrepPresentationActivity extends Activity {
     
     private Thread mGazeThread;  
     
-    private Handler uiHandler; 
+    private Handler uiHandler;
 
     /* FIREBASE GLOBALS */
      Firebase connection;
@@ -104,7 +104,8 @@ public class PrepPresentationActivity extends Activity {
         mStepDetector = new StepDetector(); 
         mStepDetector.addStepListener(new StepListener() {
         	public void onStep() {
-        		System.out.println("ON STEP"); 
+        		g.pres.numSteps++; 
+        		mTitleView.setText("Steps: " + g.pres.numSteps);
         	}
         	
         	public void passValue() {
