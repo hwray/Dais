@@ -126,16 +126,25 @@ public class PrepPresentationActivity extends Activity {
                      // mAudioManager.playSoundEffect(Sounds.TAP);
                  	if (g.pres.mLeftHeading == 0) {
                  		g.pres.mLeftHeading = mOrientationManager.getHeading(); 
+                 		
+                 		if (g.pres.mLeftHeading < 0) {
+                 			g.pres.mLeftHeading += 360; 
+                 		}
+                 		
                  		mLeftHeadingView.setText("" + g.pres.mLeftHeading); 
                  		mTitleView.setText("Look at right side of room and tap"); 
                  	} else if (g.pres.mRightHeading == 0) {
                  		g.pres.mRightHeading = mOrientationManager.getHeading(); 
                  		
-                 		if (g.pres.mLeftHeading > g.pres.mRightHeading) {
-                 			g.pres.mCenterHeading = (g.pres.mLeftHeading + g.pres.mRightHeading) / 2; 
-                 		} else {
-                 			g.pres.mCenterHeading = ((g.pres.mLeftHeading - 360) + g.pres.mRightHeading) / 2; 
+                 		if (g.pres.mRightHeading < 0) {
+                 			g.pres.mRightHeading += 360; 
                  		}
+                 		
+                 		if (g.pres.mRightHeading < g.pres.mLeftHeading) {
+                 			g.pres.mRightHeading += 360; 
+                 		}
+                 		
+                 		g.pres.mCenterHeading = (g.pres.mLeftHeading + g.pres.mRightHeading) / 2; 
                  		
                  		mTitleView.setText(""); 
                  		mLeftHeadingView.setText("");
@@ -214,6 +223,11 @@ public class PrepPresentationActivity extends Activity {
 			        		sendUIMessage(1);
 			        	} else {
 			        		float heading = mOrientationManager.getHeading(); 
+			        		
+			        		if (g.pres.mRightHeading > 360) {
+			        			heading += 360; 
+			        		}
+			        		
 			        		g.pres.headings.add(heading); 
 			        		
 			        		if (heading > g.pres.mLeftHeading && heading < g.pres.mCenterHeading) {
