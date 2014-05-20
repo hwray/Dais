@@ -6,6 +6,7 @@ import com.google.android.glass.touchpad.GestureDetector;
 
 import android.app.Activity;
 import android.content.Context;
+import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -110,6 +111,14 @@ public class PrepPresentationActivity extends Activity {
         		
         	}
         }); 
+        
+        Sensor mSensor = mSensorManager.getDefaultSensor(
+                Sensor.TYPE_ACCELEROMETER /*| 
+                Sensor.TYPE_MAGNETIC_FIELD | 
+                Sensor.TYPE_ORIENTATION*/);
+        mSensorManager.registerListener(mStepDetector,
+                mSensor,
+                SensorManager.SENSOR_DELAY_FASTEST);
         
         initHandler(); 
         //initFirebase(); 

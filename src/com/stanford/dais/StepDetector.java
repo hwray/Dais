@@ -63,7 +63,6 @@ public class StepDetector implements SensorEventListener
     
     //public void onSensorChanged(int sensor, float[] values) {
     public void onSensorChanged(SensorEvent event) {
-    	System.out.println("SENSOR CHANGEDD"); 
         Sensor sensor = event.sensor; 
         synchronized (this) {
             if (sensor.getType() == Sensor.TYPE_ORIENTATION) {
