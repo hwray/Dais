@@ -3,7 +3,14 @@ function Presentation(pres) {
   this.mCenterHeading = pres.mCenterHeading;
   this.mLeftHeading = pres.mLeftHeading;
   this.orientations = pres.orientations;
+  if (typeof(pres.presentation) != 'undefined') {
+    this.orientations = pres.presentation.headings;
+    this.mRightHeading = pres.presentation.mRightHeading;
+    this.mCenterHeading = pres.presentation.mCenterHeading;
+    this.mLeftHeading = pres.presentation.mLeftHeading;
+  }
 }
+
 
 /* Presentation Global Constants */
 Presentation.prototype.NUM_SEGMENTS = 25;
@@ -11,6 +18,7 @@ Presentation.prototype.NUM_SEGMENTS = 25;
 Presentation.prototype.displayHeatMap = function() {
   // sort orientations
   this.orientations.sort();
+
 
   // countOrientationsBySegment()
   segmentCounters = [];

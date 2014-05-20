@@ -4,6 +4,8 @@ presentations = [];
 firebaseRef.on("child_added", function(snapshot) {
     // new presentation added
     newPresentation = new Presentation(snapshot.val());
+    console.log(newPresentation);
     presentations.push(newPresentation);
+
     document.body.appendChild(presentations[presentations.length - 1].displayHeatMap());
   });
