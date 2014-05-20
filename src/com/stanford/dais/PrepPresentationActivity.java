@@ -16,6 +16,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -35,7 +38,7 @@ import android.os.Build;
 
 import com.firebase.client.*;
 
-public class PrepPresentationActivity extends Activity {
+public class PrepPresentationActivity extends Activity implements SensorEventListener {
 
 	private Globals g; 
 	
@@ -51,6 +54,11 @@ public class PrepPresentationActivity extends Activity {
     
     private OrientationManager mOrientationManager;        
     private boolean mInterference; 
+    
+    private SensorManager mSensorManager; 
+    private LocationManager mLocationManager; 
+    private Sensor mStepCounterSensor;
+    private Sensor mStepDetectorSensor;
     
     private GestureDetector mGestureDetector;
     
@@ -83,6 +91,26 @@ public class PrepPresentationActivity extends Activity {
     };
     
     @Override
+    public void onSensorChanged(SensorEvent event) {
+        Sensor sensor = event.sensor;
+        float[] values = event.values;
+        int value = -1;
+       
+        if (values.length > 0) {
+           value = (int) values[0];
+        }
+        
+        System.out.println("ONSENSORCHANGED EVENT"); 
+
+         if (sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
+           mTitleView.setText("Step Counter Detected : " + value);
+        } else if (sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
+            // For test only. Only allowed value is 1.0 i.e. for step taken
+            mTitleView.setText("Step Detector Detected : " + value);
+        }
+    }
+    
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prep_presentation);
@@ -100,20 +128,39 @@ public class PrepPresentationActivity extends Activity {
         
         mGestureDetector = createGestureDetector(this); 
         
-        SensorManager sensorManager =
+        mSensorManager =
                 (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        LocationManager locationManager =
+        mLocationManager =
                 (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        
+        mStepCounterSensor = 
+        		mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        mStepDetectorSensor = 
+        		mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
 
-        mOrientationManager = new OrientationManager(sensorManager, locationManager);
+        mOrientationManager = new OrientationManager(mSensorManager, mLocationManager);
         
         mOrientationManager.addOnChangedListener(mCompassListener);
         mOrientationManager.start();
         
         initHandler(); 
-        //initFirebase(); 
     }
     
+    protected void onResume() {
+        super.onResume();
+        /*
+        mSensorManager.registerListener(this, mStepCounterSensor,
+              SensorManager.SENSOR_DELAY_FASTEST);      
+        mSensorManager.registerListener(this, mStepDetectorSensor,
+              SensorManager.SENSOR_DELAY_FASTEST);
+              */
+    }
+
+    protected void onStop() {
+        super.onStop();
+        mSensorManager.unregisterListener(this, mStepCounterSensor);
+        mSensorManager.unregisterListener(this, mStepDetectorSensor);
+    }
     
     private GestureDetector createGestureDetector(Context context) {    	
         GestureDetector gestureDetector = new GestureDetector(context);
@@ -191,10 +238,6 @@ public class PrepPresentationActivity extends Activity {
 				}
 			}
     	}; 
-    }
-    
-    public void initFirebase() {
-
     }
     
     /*
@@ -279,5 +322,11 @@ public class PrepPresentationActivity extends Activity {
 		Message message = uiHandler.obtainMessage(); 
 		message.what = msg; 
 		uiHandler.sendMessage(message);
+	}
+
+	@Override
+	public void onAccuracyChanged(Sensor arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
 	}
 }
