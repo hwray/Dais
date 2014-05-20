@@ -40,6 +40,8 @@ public class PrepPresentationActivity extends Activity {
     private SensorManager mSensorManager; 
     private LocationManager mLocationManager; 
     
+    private StepDetector mStepDetector; 
+    
     private GestureDetector mGestureDetector;
     
     private Thread mGazeThread;  
@@ -97,6 +99,17 @@ public class PrepPresentationActivity extends Activity {
         
         mOrientationManager.addOnChangedListener(mCompassListener);
         mOrientationManager.start();
+        
+        mStepDetector = new StepDetector(); 
+        mStepDetector.addStepListener(new StepListener() {
+        	public void onStep() {
+        		System.out.println("ON STEP"); 
+        	}
+        	
+        	public void passValue() {
+        		
+        	}
+        }); 
         
         initHandler(); 
         //initFirebase(); 
@@ -206,7 +219,7 @@ public class PrepPresentationActivity extends Activity {
 							//Thread.sleep(100); 
 							//continue; 
 						}
-			        	
+						
 			        	if (mOrientationManager.getPitch() > TOO_STEEP_PITCH_DEGREES) {
 			        		sendUIMessage(1);
 			        	} else {
