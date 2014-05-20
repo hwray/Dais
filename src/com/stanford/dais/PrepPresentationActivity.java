@@ -157,8 +157,7 @@ public class PrepPresentationActivity extends Activity {
                      // do something on left (backwards) swipe
                      return true;
                  } else if (gesture == Gesture.SWIPE_DOWN) {
-                 	//connection.setValue(g.pres.toMap());
-                 	//g.pres.reset();
+                 	g.pres.pushOnline();
                  }
                  return false;
         	 }
@@ -188,11 +187,7 @@ public class PrepPresentationActivity extends Activity {
     }
     
     public void initFirebase() {
-    	connection = new Firebase("https://dais.firebaseio.com/demo/"); // Firebase
 
-    	connection.setValue("Hello, World!");
-    	testConnection = new Firebase("http://dais.firebaseio.com/testStatus");
-    	testConnection.setValue("creating new gesture");
     }
     
     /*
