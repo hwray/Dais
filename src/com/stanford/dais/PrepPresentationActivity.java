@@ -158,6 +158,7 @@ public class PrepPresentationActivity extends Activity {
                      return true;
                  } else if (gesture == Gesture.SWIPE_DOWN) {
                  	g.pres.pushOnline();
+                 	g.pres.reset();
                  }
                  return false;
         	 }

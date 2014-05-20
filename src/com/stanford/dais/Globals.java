@@ -15,10 +15,10 @@ public class Globals extends Application {
 	public void onCreate() {
 		super.onCreate();
 		pres = new Presentation(new Firebase("https://dais.firebaseio.com/demo"));
-		
 	}
 	
 	public void clearGlobals() {
+		pres.reset();
 		
 	}
 	
