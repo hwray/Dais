@@ -7,5 +7,7 @@ firebaseRef.on("child_added", function(snapshot) {
     console.log(newPresentation);
     presentations.push(newPresentation);
 
+    document.body.innerHTML = "";
     document.body.appendChild(presentations[presentations.length - 1].displayHeatMap());
-  });
+});
+
