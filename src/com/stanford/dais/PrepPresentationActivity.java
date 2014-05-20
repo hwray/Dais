@@ -102,10 +102,11 @@ public class PrepPresentationActivity extends Activity {
         mOrientationManager.start();
         
         mStepDetector = new StepDetector(); 
+        mStepDetector.setSensitivity(2.96f);
         mStepDetector.addStepListener(new StepListener() {
         	public void onStep() {
         		g.pres.numSteps++; 
-        		mTitleView.setText("Steps: " + g.pres.numSteps);
+        		mHeadingView.setText("Steps: " + g.pres.numSteps);
         	}
         	
         	public void passValue() {
