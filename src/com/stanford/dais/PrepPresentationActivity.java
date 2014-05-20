@@ -131,11 +131,11 @@ public class PrepPresentationActivity extends Activity {
                  	} else if (g.pres.mRightHeading == 0) {
                  		g.pres.mRightHeading = mOrientationManager.getHeading(); 
                  		                 		
-                 		if (g.pres.mRightHeading < g.pres.mLeftHeading) {
-                 			float temp = g.pres.mRightHeading; 
-                 			g.pres.mRightHeading = g.pres.mLeftHeading; 
-                 			g.pres.mLeftHeading = temp; 
-                 		}
+//                 		if (g.pres.mRightHeading < g.pres.mLeftHeading) {
+//                 			float temp = g.pres.mRightHeading; 
+//                 			g.pres.mRightHeading = g.pres.mLeftHeading; 
+//                 			g.pres.mLeftHeading = temp; 
+//                 		}
                  		
                  		g.pres.mCenterHeading = (g.pres.mLeftHeading + g.pres.mRightHeading) / 2; 
                  		
