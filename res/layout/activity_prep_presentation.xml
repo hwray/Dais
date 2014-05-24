@@ -47,6 +47,29 @@
         android:layout_marginBottom="@dimen/tip_margin_bottom"
         android:textAppearance="?android:attr/textAppearanceSmall"
     />
-	
+
+	<ImageView
+	    android:id="@+id/left_arrow"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_centerHorizontal="true"
+	    android:layout_centerVertical="true"
+	    android:src="@drawable/left" android:contentDescription="leftArrowGraphic"/>
+
+	<ImageView
+	    android:id="@+id/right_arrow"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_centerHorizontal="true"
+	    android:layout_centerVertical="true"
+	    android:src="@drawable/right" android:contentDescription="rightArrowGraphic"/>
+
+	<ImageView
+	    android:id="@+id/up_arrow"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_centerHorizontal="true"
+	    android:layout_centerVertical="true"
+	    android:src="@drawable/up" android:contentDescription="rightArrowGraphic"/>
     
 </RelativeLayout>
