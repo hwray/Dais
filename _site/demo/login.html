@@ -1,8 +1,6 @@
 <html>
 <head>
-<title>Log In With Google</title>
-<!-- <meta name="google-signin-cookiepolicy" content="single_host_origin" /> -->
-<!-- <meta name="google-signin-callback" content="signinCallback" /> -->
+<title>Dais | Log In With Google</title>
 <link href="http://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
 
 <style type='text/css'>
@@ -66,7 +64,6 @@
 
   function render() {
     gapi.signin.render('signinButton', {
-      //'callback': 'signinCallback',
       'clientid': '383055630084-416plvnvcs8aq79pq9lfssungfqh88k4.apps.googleusercontent.com',
       'cookiepolicy': 'single_host_origin',
       'requestvisibleactions': 'http://schemas.google.com/AddActivity',
@@ -87,6 +84,7 @@ function signinCallback(authResult) {
     //   "user_signed_out" - User is signed-out
     //   "access_denied" - User denied access to your app
     //   "immediate_failed" - Could not automatically log in the user
+    console.log(authResult);
     console.log('Sign-in state: ' + authResult['error']);
   }
 }

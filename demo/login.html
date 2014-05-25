@@ -1,8 +1,6 @@
 <html>
 <head>
-<title>Log In With Google</title>
-<!-- <meta name="google-signin-cookiepolicy" content="single_host_origin" /> -->
-<!-- <meta name="google-signin-callback" content="signinCallback" /> -->
+<title>Dais | Log In With Google</title>
 <link href="http://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
 
 <style type='text/css'>
@@ -66,7 +64,6 @@
 
   function render() {
     gapi.signin.render('signinButton', {
-      //'callback': 'signinCallback',
       'clientid': '383055630084-416plvnvcs8aq79pq9lfssungfqh88k4.apps.googleusercontent.com',
       'cookiepolicy': 'single_host_origin',
       'requestvisibleactions': 'http://schemas.google.com/AddActivity',
@@ -80,6 +77,7 @@ function signinCallback(authResult) {
     // Update the app to reflect a signed in user
     // Hide the sign-in button now that the user is authorized, for example:
     document.getElementById('signinButton').setAttribute('style', 'display: none');
+    window.location.replace("http://hwray.github.io/Dais/demo");
     // redirect to home page
   } else {
     // Update the app to reflect a signed out user
