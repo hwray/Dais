@@ -7,6 +7,7 @@ import com.firebase.client.*;
 
 public class Presentation {
 	
+	public String identifier;
 	public float mLeftHeading; 
 	public float mRightHeading; 
 	public float mCenterHeading;
@@ -25,12 +26,11 @@ public class Presentation {
 	// Real Talk
 	public ArrayList<Float> headings; 
 	
-	public Presentation(Firebase connection) {
+	public Presentation(String identifier) {
+		this.identifier = identifier;
 		mLeftHeading = 0;
 		mRightHeading = 0;
 		mCenterHeading = 0;
-		orientations = new ArrayList<Float>();
-		this.connection = connection;
 		mLeftTime = 0; 
 		mRightTime = 0; 
 		mGazeTime = 0; 
@@ -62,15 +62,16 @@ public class Presentation {
 	}
 	
 	class PresentationRunnable implements Runnable {
-		
 		private Presentation pres;
 		public PresentationRunnable(Presentation pres) {
 			this.pres = pres;
 		}
 		@Override
 		public void run() {
+			Firebase connection = new Firebase("https://dais.firebaseio.com/" + identifier);
 			Firebase childConnection = connection.push();
 			childConnection.setValue(pres.toMap());
+			pres.reset();
 		}
 		
 	}
