@@ -1,11 +1,9 @@
 package com.stanford.dais; 
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.http.Header;
-
 import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
@@ -13,26 +11,17 @@ import com.google.android.glass.touchpad.GestureDetector;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
+import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.os.Build;
 
@@ -57,11 +46,16 @@ public class PrepPresentationActivity extends Activity {
     private OrientationManager mOrientationManager;        
     private boolean mInterference; 
     
+    private SensorManager mSensorManager; 
+    private LocationManager mLocationManager; 
+    
+    private StepDetector mStepDetector; 
+    
     private GestureDetector mGestureDetector;
     
     private Thread mGazeThread;  
     
-    private Handler uiHandler; 
+    private Handler uiHandler;
 
     /* FIREBASE GLOBALS */
      Firebase connection;
@@ -107,15 +101,36 @@ public class PrepPresentationActivity extends Activity {
         
         mGestureDetector = createGestureDetector(this); 
         
-        SensorManager sensorManager =
+        mSensorManager =
                 (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        LocationManager locationManager =
+        mLocationManager =
                 (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        mOrientationManager = new OrientationManager(sensorManager, locationManager);
+        mOrientationManager = new OrientationManager(mSensorManager, mLocationManager);
         
         mOrientationManager.addOnChangedListener(mCompassListener);
         mOrientationManager.start();
+        
+        mStepDetector = new StepDetector(); 
+        mStepDetector.setSensitivity(2.96f);
+        mStepDetector.addStepListener(new StepListener() {
+        	public void onStep() {
+        		g.pres.numSteps++; 
+        		mHeadingView.setText("Steps: " + g.pres.numSteps);
+        	}
+        	
+        	public void passValue() {
+        		
+        	}
+        }); 
+        
+        Sensor mSensor = mSensorManager.getDefaultSensor(
+                Sensor.TYPE_ACCELEROMETER /*| 
+                Sensor.TYPE_MAGNETIC_FIELD | 
+                Sensor.TYPE_ORIENTATION*/);
+        mSensorManager.registerListener(mStepDetector,
+                mSensor,
+                SensorManager.SENSOR_DELAY_FASTEST);
         
         initHandler(); 
         //initFirebase(); 
@@ -133,11 +148,23 @@ public class PrepPresentationActivity extends Activity {
                      // mAudioManager.playSoundEffect(Sounds.TAP);
                  	if (g.pres.mLeftHeading == 0) {
                  		g.pres.mLeftHeading = mOrientationManager.getHeading(); 
+                 		
+                 		if (g.pres.mLeftHeading < 0) {
+                 			g.pres.mLeftHeading += 360; 
+                 		}
+                 		
                  		mLeftHeadingView.setText("" + g.pres.mLeftHeading); 
                  		mTitleView.setText("Look at right side of room and tap"); 
                  	} else if (g.pres.mRightHeading == 0) {
                  		g.pres.mRightHeading = mOrientationManager.getHeading(); 
-                 		                
+                 		
+                 		if (g.pres.mRightHeading < 0) {
+                 			g.pres.mRightHeading += 360; 
+                 		}
+                 		
+                 		if (g.pres.mRightHeading < g.pres.mLeftHeading) {
+                 			g.pres.mRightHeading += 360; 
+                 		}
                  		
                  		g.pres.mCenterHeading = (g.pres.mLeftHeading + g.pres.mRightHeading) / 2; 
                  		
@@ -214,11 +241,16 @@ public class PrepPresentationActivity extends Activity {
 							//Thread.sleep(100); 
 							//continue; 
 						}
-			        	
+						
 			        	if (mOrientationManager.getPitch() > TOO_STEEP_PITCH_DEGREES) {
 			        		sendUIMessage(1);
 			        	} else {
 			        		float heading = mOrientationManager.getHeading(); 
+			        		
+			        		if (g.pres.mRightHeading > 360) {
+			        			heading += 360; 
+			        		}
+			        		
 			        		g.pres.headings.add(heading); 
 			        		
 			        		if (heading > g.pres.mLeftHeading && heading < g.pres.mCenterHeading) {
