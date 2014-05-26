@@ -67,7 +67,7 @@ public class PrepPresentationActivity extends Activity {
     
     private RecordingThread mRecordingThread;
     
-    private Thread mGazeThread;  
+    private GazeThread mGazeThread;  
     
     private Handler uiHandler;
 
@@ -163,6 +163,9 @@ public class PrepPresentationActivity extends Activity {
 
         mRecordingThread = new RecordingThread();
         mRecordingThread.start();
+        
+        mGazeThread = new GazeThread(); 
+        //mGazeThread.start(); 
     }
 
     @Override
@@ -172,6 +175,11 @@ public class PrepPresentationActivity extends Activity {
         if (mRecordingThread != null) {
             mRecordingThread.stopRunning();
             mRecordingThread = null;
+        }
+        
+        if (mGazeThread != null) {
+            mGazeThread.stopRunning();
+            mGazeThread = null;
         }
     }
     
@@ -223,7 +231,7 @@ public class PrepPresentationActivity extends Activity {
                  		mRightHeadingView.setText("");
                  		mHeadingView.setText(""); 
                  		
-                 		initGazeThread(); 
+                 		mGazeThread.start(); 
                  	}
                     return true;
                  } else if (gesture == Gesture.TWO_TAP) {
@@ -236,8 +244,10 @@ public class PrepPresentationActivity extends Activity {
                      // do something on left (backwards) swipe
                      return true;
                  } else if (gesture == Gesture.SWIPE_DOWN) {
-                 	g.pres.pushOnline();
-//                 	g.pres.reset();
+                	 mRecordingThread.stopRunning(); 
+                	 mGazeThread.stopRunning(); 
+                     g.pres.pushOnline();
+                     // g.pres.reset();
                  }
                  return false;
         	 }
@@ -272,76 +282,94 @@ public class PrepPresentationActivity extends Activity {
 		uiHandler.sendMessage(message);
 	}
     
+    /**
+     * A background thread that checks the compass heading of the presenter's gaze, 
+     * in order to track visual spread and give live feedback on where to look. 
+     */
+    private class GazeThread extends Thread {
+    	
+        private boolean mShouldContinue = true;
 
-    private void initGazeThread() {
-		mGazeThread = new Thread() {
-			public void run() {
-				while (true) {
-					try {
-						if (mInterference) {
-							sendUIMessage(0); 
-							//Thread.sleep(100); 
-							//continue; 
-						}
-						
-			        	if (mOrientationManager.getPitch() > TOO_STEEP_PITCH_DEGREES) {
-			        		sendUIMessage(1);
-			        	} else {
-			        		float heading = mOrientationManager.getHeading(); 
-			        		
-			        		if (g.pres.mRightHeading > 360) {
-			        			heading += 360; 
-			        		}
-			        		
-			        		g.pres.headings.add(heading); 
-			        		
-			        		if (heading > g.pres.mLeftHeading && heading < g.pres.mCenterHeading) {
-			        			if (g.pres.mGazeSide != 0) {
-				        			g.pres.mGazeSide = 0; 
-			        				g.pres.mGazeTime = 0; 
-			        			}
-			        			g.pres.mGazeTime += 1; 
-			        			
-			        			if (g.pres.mGazeTime > TOO_LONG_GAZE_TIME) {
-			        				sendUIMessage(2);
-			        			} else {
-			        				sendUIMessage(5); 
-			        			}
-			        			
-			        			g.pres.mLeftTime += 1; 
-			        		} 
-			        		else if (heading > g.pres.mCenterHeading && heading < g.pres.mRightHeading) {
-			        			if (g.pres.mGazeSide != 1) {
-				        			g.pres.mGazeSide = 1; 
-				        			g.pres.mGazeTime = 0; 
-			        			}
-			        			g.pres.mGazeTime += 1; 
-			        			
-			        			if (g.pres.mGazeTime > TOO_LONG_GAZE_TIME) {
-			        				sendUIMessage(3); 
-			        			} else {
-			        				sendUIMessage(5); 
-			        			}
-			        			
-			        			g.pres.mRightTime += 1; 
-			        		} 
-			        		else {
-			        			sendUIMessage(4); 
-			        		}
-			        	}
-			        	
-						Thread.sleep(100);
-					} catch (Exception e) { e.printStackTrace(); }
-				}
-			}
-		};
-		mGazeThread.start(); 
+        @Override
+        public void run() {
+            while (shouldContinue()) {
+            	try {
+					if (mInterference) {
+						sendUIMessage(0); 
+						//Thread.sleep(100); 
+						//continue; 
+					}
+					
+		        	if (mOrientationManager.getPitch() > TOO_STEEP_PITCH_DEGREES) {
+		        		sendUIMessage(1);
+		        	} else {
+		        		float heading = mOrientationManager.getHeading(); 
+		        		
+		        		if (g.pres.mRightHeading > 360) {
+		        			heading += 360; 
+		        		}
+		        		
+		        		g.pres.headings.add(heading); 
+		        		
+		        		if (heading > g.pres.mLeftHeading && heading < g.pres.mCenterHeading) {
+		        			if (g.pres.mGazeSide != 0) {
+			        			g.pres.mGazeSide = 0; 
+		        				g.pres.mGazeTime = 0; 
+		        			}
+		        			g.pres.mGazeTime += 1; 
+		        			
+		        			if (g.pres.mGazeTime > TOO_LONG_GAZE_TIME) {
+		        				sendUIMessage(2);
+		        			} else {
+		        				sendUIMessage(5); 
+		        			}
+		        			
+		        			g.pres.mLeftTime += 1; 
+		        		} 
+		        		else if (heading > g.pres.mCenterHeading && heading < g.pres.mRightHeading) {
+		        			if (g.pres.mGazeSide != 1) {
+			        			g.pres.mGazeSide = 1; 
+			        			g.pres.mGazeTime = 0; 
+		        			}
+		        			g.pres.mGazeTime += 1; 
+		        			
+		        			if (g.pres.mGazeTime > TOO_LONG_GAZE_TIME) {
+		        				sendUIMessage(3); 
+		        			} else {
+		        				sendUIMessage(5); 
+		        			}
+		        			
+		        			g.pres.mRightTime += 1; 
+		        		} 
+		        		else {
+		        			sendUIMessage(4); 
+		        		}
+		        	}
+		        	
+					Thread.sleep(100);
+				} catch (Exception e) { e.printStackTrace(); }
+            }
+        }
+
+        /**
+         * Gets a value indicating whether the thread should continue running.
+         *
+         * @return true if the thread should continue running or false if it should stop
+         */
+        private synchronized boolean shouldContinue() {
+            return mShouldContinue;
+        }
+
+        /** Notifies the thread that it should stop running at the next opportunity. */
+        public synchronized void stopRunning() {
+            mShouldContinue = false;
+        }
     }
-     
+    
     
     /**
-     * A background thread that receives audio from the microphone and sends it to the waveform
-     * visualizing view.
+     * A background thread that receives audio from the microphone 
+     * and gives the presenter feedback to "Speak up!" when they mumble. 
      */
     private class RecordingThread extends Thread {
 
