@@ -18,7 +18,9 @@ public class Presentation {
 	public float mRightTime;  
 	
 	public float mGazeTime;  
-	public int mGazeSide;  
+	public int mGazeSide;
+	
+	public double mPrefVolume; 
 	
 	public int numSteps; 
 	
@@ -34,6 +36,7 @@ public class Presentation {
 		mRightTime = 0; 
 		mGazeTime = 0; 
 		mGazeSide = 0; 
+		mPrefVolume = 0; 
 		numSteps = 0; 
 		headings = new ArrayList<Float>();
 	}
@@ -46,6 +49,8 @@ public class Presentation {
 		mRightTime = 0; 
 		mGazeTime = 0; 
 		mGazeSide = 0; 
+		mPrefVolume = 0; 
+		numSteps = 0; 
 		headings = new ArrayList<Float>();
 	}
 	
