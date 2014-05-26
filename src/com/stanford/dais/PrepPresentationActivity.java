@@ -236,11 +236,15 @@ public class PrepPresentationActivity extends Activity {
                  		
                  		g.pres.mCenterHeading = (g.pres.mLeftHeading + g.pres.mRightHeading) / 2; 
                  		
-                 		mTitleView.setText("Tap and speak at desired volume"); 
-                 		mHeadingView.setText("");                  		
+                 		mTitleView.setText("Tap to record background volume"); 
+                 		mHeadingView.setText("");    
+                 	} else if (g.pres.mFloorVolume == 0 && mCalibrationThread == null) {
+                 		mTitleView.setText("Calibrating room volume..."); 
+                 		mCalibrationThread = new CalibrationThread("floor"); 
+                 		mCalibrationThread.start(); 
                  	} else if (g.pres.mPrefVolume == 0 && mCalibrationThread == null) {
                  		mTitleView.setText("Calibrating speech volume..."); 
-                 		mCalibrationThread = new CalibrationThread(); 
+                 		mCalibrationThread = new CalibrationThread("pref"); 
                  		mCalibrationThread.start(); 
                  	} else if (mCalibrationThread != null) {
                  		return true; 
@@ -295,7 +299,10 @@ public class PrepPresentationActivity extends Activity {
 				} else if (msg.what == 5) {
 					mTitleView.setText(""); 
 				} else if (msg.what == 6) {
-					mHeadingView.setText("Volume: " + String.format(mDecibelFormat, g.pres.mPrefVolume));
+					mHeadingView.setText("Room: " + String.format(mDecibelFormat, g.pres.mFloorVolume));
+					mTitleView.setText("Tap and speak at desired volume"); 
+				} else if (msg.what == 7) {
+					mHeadingView.setText("Speech: " + String.format(mDecibelFormat, g.pres.mPrefVolume));
 					mTitleView.setText("Calibration complete. Tap to start."); 
 				}
 			}
@@ -399,11 +406,17 @@ public class PrepPresentationActivity extends Activity {
      */
     private class CalibrationThread extends Thread {
 
+    	private String type; 
+    	
         private boolean mShouldContinue = true;
         
         private double mAverageDecibels; 
         
         private ArrayList<Double> mDecibelReadings; 
+        
+        public CalibrationThread(String type) {
+        	this.type = type; 
+        }
 
         @Override
         public void run() {
@@ -425,10 +438,14 @@ public class PrepPresentationActivity extends Activity {
             
             mAverageDecibels /= (double)mDecibelReadings.size(); 
             
-            g.pres.mPrefVolume = mAverageDecibels; 
-            
-			sendUIMessage(6); 
-			
+            if (type.equals("floor")) {
+            	g.pres.mFloorVolume = mAverageDecibels; 
+    			sendUIMessage(6); 
+            } else if (type.equals("pref")) {
+                g.pres.mPrefVolume = mAverageDecibels; 
+    			sendUIMessage(7); 
+            }
+            			
 			mCalibrationThread = null; 
         }
 
