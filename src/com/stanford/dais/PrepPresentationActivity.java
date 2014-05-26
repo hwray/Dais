@@ -216,6 +216,8 @@ public class PrepPresentationActivity extends Activity {
                  	} else if (g.pres.mRightHeading == 0) {
                  		g.pres.mRightHeading = mOrientationManager.getHeading(); 
                  		
+                 		mRightHeadingView.setText("" + g.pres.mRightHeading);
+                 		
                  		if (g.pres.mRightHeading < 0) {
                  			g.pres.mRightHeading += 360; 
                  		}
@@ -226,10 +228,11 @@ public class PrepPresentationActivity extends Activity {
                  		
                  		g.pres.mCenterHeading = (g.pres.mLeftHeading + g.pres.mRightHeading) / 2; 
                  		
-                 		mTitleView.setText(""); 
+                 		mTitleView.setText("Tap and speak at desired volume"); 
                  		mLeftHeadingView.setText("");
-                 		mRightHeadingView.setText("");
-                 		mHeadingView.setText(""); 
+                 		mHeadingView.setText("");                  		
+                 	} else if (g.pres.mPrefVolume == 0) {
+                 		
                  		
                  		mGazeThread.start(); 
                  	}
@@ -368,6 +371,74 @@ public class PrepPresentationActivity extends Activity {
     
     
     /**
+     * A background thread that calibrates for the presenter's desired speech volume
+     * by recording 8 seconds of audio from the microphone. 
+     */
+    private class SpeechCalibrationThread extends Thread {
+
+        private boolean mShouldContinue = true;
+
+        @Override
+        public void run() {
+            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_AUDIO);
+
+            AudioRecord record = new AudioRecord(AudioSource.MIC, SAMPLING_RATE,
+                    AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, mBufferSize);
+            record.startRecording();
+
+            while (shouldContinue()) {
+                record.read(mAudioBuffer, 0, mBufferSize / 2);
+                computeDecibelLevel();
+            }
+
+            record.stop();
+            record.release();
+        }
+
+        /**
+         * Gets a value indicating whether the thread should continue running.
+         *
+         * @return true if the thread should continue running or false if it should stop
+         */
+        private synchronized boolean shouldContinue() {
+            return mShouldContinue;
+        }
+
+        /** Notifies the thread that it should stop running at the next opportunity. */
+        public synchronized void stopRunning() {
+            mShouldContinue = false;
+        }
+
+        /**
+         * Computes the decibel level of the current sound buffer. 
+         */
+        private void computeDecibelLevel() {
+            // Compute the root-mean-squared of the sound buffer and then apply the formula for
+            // computing the decibel level, 20 * log_10(rms). This is an uncalibrated calculation
+            // that assumes no noise in the samples; with 16-bit recording, it can range from
+            // -90 dB to 0 dB.
+            double sum = 0;
+
+            for (short rawSample : mAudioBuffer) {
+                double sample = rawSample / 32768.0;
+                sum += sample * sample;
+            }
+
+            double rms = Math.sqrt(sum / mAudioBuffer.length);
+            final double db = 20 * Math.log10(rms);
+
+            // Update the text view on the main thread.
+            mHeadingView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mHeadingView.setText(String.format(mDecibelFormat, db));
+                }
+            });
+        }
+    }
+    
+    
+    /**
      * A background thread that receives audio from the microphone 
      * and gives the presenter feedback to "Speak up!" when they mumble. 
      */
@@ -383,9 +454,12 @@ public class PrepPresentationActivity extends Activity {
                     AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, mBufferSize);
             record.startRecording();
 
+            int i = 0; 
             while (shouldContinue()) {
                 record.read(mAudioBuffer, 0, mBufferSize / 2);
                 updateDecibelLevel();
+                i++; 
+                System.out.println("DECIBEL NUM: " + i); 
             }
 
             record.stop();
