@@ -45,8 +45,9 @@ public class PrepPresentationActivity extends Activity {
 	private TextView mLeftHeadingView; 
 	private TextView mRightHeadingView; 
 
-    private static final float TOO_LONG_GAZE_TIME = 100.0f; 
-    private static final float TOO_STEEP_PITCH_DEGREES = 10.0f;
+	private static final int MUMBLE_TIME_THRESHOLD = 30; 
+    private static final float GAZE_TIME_THRESHOLD = 100.0f; 
+    private static final float GAZE_PITCH_THRESHOLD = 10.0f;
     
     // The sampling rate for the audio recorder.
     private static final int SAMPLING_RATE = 44100;
@@ -67,9 +68,9 @@ public class PrepPresentationActivity extends Activity {
     private short[] mAudioBuffer;
     private String mDecibelFormat;
     
-    private SpeechCalibrationThread mCalibrationThread; 
+    private CalibrationThread mCalibrationThread; 
     
-    private RecordingThread mRecordingThread;
+    private SpeechThread mSpeechThread;
     
     private GazeThread mGazeThread;  
     
@@ -164,10 +165,8 @@ public class PrepPresentationActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        mCalibrationThread = new SpeechCalibrationThread(); 
         
-        mRecordingThread = new RecordingThread();
+        mSpeechThread = new SpeechThread();
         
         mGazeThread = new GazeThread();         
     }
@@ -181,9 +180,9 @@ public class PrepPresentationActivity extends Activity {
         	mCalibrationThread = null; 
         }
         
-        if (mRecordingThread != null) {
-            mRecordingThread.stopRunning();
-            mRecordingThread = null;
+        if (mSpeechThread != null) {
+            mSpeechThread.stopRunning();
+            mSpeechThread = null;
         }
         
         if (mGazeThread != null) {
@@ -239,8 +238,9 @@ public class PrepPresentationActivity extends Activity {
                  		
                  		mTitleView.setText("Tap and speak at desired volume"); 
                  		mHeadingView.setText("");                  		
-                 	} else if (g.pres.mPrefVolume == 0) {
+                 	} else if (g.pres.mPrefVolume == 0 && mCalibrationThread == null) {
                  		mTitleView.setText("Calibrating speech volume..."); 
+                 		mCalibrationThread = new CalibrationThread(); 
                  		mCalibrationThread.start(); 
                  	} else if (mCalibrationThread != null) {
                  		return true; 
@@ -250,7 +250,7 @@ public class PrepPresentationActivity extends Activity {
                  		mRightHeadingView.setText(""); 
                  		mHeadingView.setText(""); 
                  		mGazeThread.start(); 
-                 		mRecordingThread.start(); 
+                 		mSpeechThread.start(); 
                  	}
                     return true;
                  } else if (gesture == Gesture.TWO_TAP) {
@@ -265,8 +265,8 @@ public class PrepPresentationActivity extends Activity {
                  } else if (gesture == Gesture.SWIPE_DOWN) {
                 	 if (mCalibrationThread != null) 
                 		 mCalibrationThread.stopRunning(); 
-                	 if (mRecordingThread != null)
-                		 mRecordingThread.stopRunning(); 
+                	 if (mSpeechThread != null)
+                		 mSpeechThread.stopRunning(); 
                 	 if (mGazeThread != null)
                 		 mGazeThread.stopRunning(); 
                      g.pres.pushOnline();
@@ -326,7 +326,7 @@ public class PrepPresentationActivity extends Activity {
 						//continue; 
 					}
 					
-		        	if (mOrientationManager.getPitch() > TOO_STEEP_PITCH_DEGREES) {
+		        	if (mOrientationManager.getPitch() > GAZE_PITCH_THRESHOLD) {
 		        		sendUIMessage(1);
 		        	} else {
 		        		float heading = mOrientationManager.getHeading(); 
@@ -344,7 +344,7 @@ public class PrepPresentationActivity extends Activity {
 		        			}
 		        			g.pres.mGazeTime += 1; 
 		        			
-		        			if (g.pres.mGazeTime > TOO_LONG_GAZE_TIME) {
+		        			if (g.pres.mGazeTime > GAZE_TIME_THRESHOLD) {
 		        				sendUIMessage(2);
 		        			} else {
 		        				sendUIMessage(5); 
@@ -359,7 +359,7 @@ public class PrepPresentationActivity extends Activity {
 		        			}
 		        			g.pres.mGazeTime += 1; 
 		        			
-		        			if (g.pres.mGazeTime > TOO_LONG_GAZE_TIME) {
+		        			if (g.pres.mGazeTime > GAZE_TIME_THRESHOLD) {
 		        				sendUIMessage(3); 
 		        			} else {
 		        				sendUIMessage(5); 
@@ -397,7 +397,7 @@ public class PrepPresentationActivity extends Activity {
      * A background thread that calibrates for the presenter's desired speech volume
      * by recording roughly 8-10 seconds of audio from the microphone. 
      */
-    private class SpeechCalibrationThread extends Thread {
+    private class CalibrationThread extends Thread {
 
         private boolean mShouldContinue = true;
         
@@ -428,6 +428,8 @@ public class PrepPresentationActivity extends Activity {
             g.pres.mPrefVolume = mAverageDecibels; 
             
 			sendUIMessage(6); 
+			
+			mCalibrationThread = null; 
         }
 
         /**
@@ -481,9 +483,13 @@ public class PrepPresentationActivity extends Activity {
      * A background thread that receives audio from the microphone 
      * and gives the presenter feedback to "Speak up!" when they mumble. 
      */
-    private class RecordingThread extends Thread {
+    private class SpeechThread extends Thread {
 
         private boolean mShouldContinue = true;
+        
+        private boolean isMumbling = false; 
+        
+        private int mNumMumbleSamples = 0; 
 
         @Override
         public void run() {
@@ -493,12 +499,9 @@ public class PrepPresentationActivity extends Activity {
                     AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, mBufferSize);
             record.startRecording();
 
-            int i = 0; 
             while (shouldContinue()) {
                 record.read(mAudioBuffer, 0, mBufferSize / 2);
-                updateDecibelLevel();
-                i++; 
-                System.out.println("DECIBEL NUM: " + i); 
+                checkDecibelLevel();
             }
 
             record.stop();
@@ -520,14 +523,10 @@ public class PrepPresentationActivity extends Activity {
         }
 
         /**
-         * Computes the decibel level of the current sound buffer and updates the appropriate text
-         * view.
+         * Computes the decibel level of the current sound buffer and
+	     * sends a message to provide UI feedback if the presenter is mumbling. 
          */
-        private void updateDecibelLevel() {
-            // Compute the root-mean-squared of the sound buffer and then apply the formula for
-            // computing the decibel level, 20 * log_10(rms). This is an uncalibrated calculation
-            // that assumes no noise in the samples; with 16-bit recording, it can range from
-            // -90 dB to 0 dB.
+        private void checkDecibelLevel() {
             double sum = 0;
 
             for (short rawSample : mAudioBuffer) {
@@ -537,14 +536,16 @@ public class PrepPresentationActivity extends Activity {
 
             double rms = Math.sqrt(sum / mAudioBuffer.length);
             final double db = 20 * Math.log10(rms);
-
-            // Update the text view on the main thread.
-            mHeadingView.post(new Runnable() {
-                @Override
-                public void run() {
-                    mHeadingView.setText(String.format(mDecibelFormat, db));
-                }
-            });
+            
+            if (db > g.pres.mFloorVolume && db < (g.pres.mPrefVolume - 5)) {
+            	mNumMumbleSamples++; 
+            } else {
+            	mNumMumbleSamples = 0; 
+            }
+            
+            if (mNumMumbleSamples > MUMBLE_TIME_THRESHOLD) {
+            	
+            }
         }
     }
 }
