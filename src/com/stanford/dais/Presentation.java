@@ -21,9 +21,6 @@ public class Presentation {
 	public int mGazeSide;  
 	
 	public int numSteps; 
-		
-	// Demo - Does not save all headings
-	public float mCurrentHeading;
 	
 	// Real Talk
 	public ArrayList<Float> headings; 
