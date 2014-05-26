@@ -51,6 +51,8 @@ public class PrepPresentationActivity extends Activity {
     // The sampling rate for the audio recorder.
     private static final int SAMPLING_RATE = 44100;
     
+	private static final int NUM_CALIBRATION_SAMPLES = 100; 
+    
     private OrientationManager mOrientationManager;        
     private boolean mInterference; 
     
@@ -64,6 +66,8 @@ public class PrepPresentationActivity extends Activity {
     private int mBufferSize;
     private short[] mAudioBuffer;
     private String mDecibelFormat;
+    
+    private SpeechCalibrationThread mCalibrationThread; 
     
     private RecordingThread mRecordingThread;
     
@@ -130,7 +134,7 @@ public class PrepPresentationActivity extends Activity {
         mStepDetector.addStepListener(new StepListener() {
         	public void onStep() {
         		g.pres.numSteps++; 
-        		mHeadingView.setText("Steps: " + g.pres.numSteps);
+        		// mHeadingView.setText("Steps: " + g.pres.numSteps);
         	}
         	
         	public void passValue() {
@@ -162,10 +166,10 @@ public class PrepPresentationActivity extends Activity {
         super.onResume();
 
         mRecordingThread = new RecordingThread();
-        mRecordingThread.start();
         
         mGazeThread = new GazeThread(); 
-        //mGazeThread.start(); 
+        
+        mCalibrationThread = new SpeechCalibrationThread(); 
     }
 
     @Override
@@ -232,9 +236,10 @@ public class PrepPresentationActivity extends Activity {
                  		mLeftHeadingView.setText("");
                  		mHeadingView.setText("");                  		
                  	} else if (g.pres.mPrefVolume == 0) {
+                 		mCalibrationThread.start(); 
                  		
                  		
-                 		mGazeThread.start(); 
+                 		//mGazeThread.start(); 
                  	}
                     return true;
                  } else if (gesture == Gesture.TWO_TAP) {
@@ -247,8 +252,12 @@ public class PrepPresentationActivity extends Activity {
                      // do something on left (backwards) swipe
                      return true;
                  } else if (gesture == Gesture.SWIPE_DOWN) {
-                	 mRecordingThread.stopRunning(); 
-                	 mGazeThread.stopRunning(); 
+                	 if (mCalibrationThread != null) 
+                		 mCalibrationThread.stopRunning(); 
+                	 if (mRecordingThread != null)
+                		 mRecordingThread.stopRunning(); 
+                	 if (mGazeThread != null)
+                		 mGazeThread.stopRunning(); 
                      g.pres.pushOnline();
                      // g.pres.reset();
                  }
@@ -262,6 +271,13 @@ public class PrepPresentationActivity extends Activity {
     	uiHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
+				String message = (String)msg.obj; 
+				if (message != null) {
+					// We've received a String message: 
+					// the average decibel level from SpeechCalibrationThread
+					mTitleView.setText(message); 
+				}
+				
 				if (msg.what == 0) {
 					mHeadingView.setText("Magnetic interference");
 				} else if (msg.what == 1) {
@@ -372,27 +388,39 @@ public class PrepPresentationActivity extends Activity {
     
     /**
      * A background thread that calibrates for the presenter's desired speech volume
-     * by recording 8 seconds of audio from the microphone. 
+     * by recording roughly 8-10 seconds of audio from the microphone. 
      */
     private class SpeechCalibrationThread extends Thread {
 
         private boolean mShouldContinue = true;
+        
+        private double mAverageDecibels; 
+        
+        private ArrayList<Double> mDecibelReadings; 
 
         @Override
         public void run() {
             android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_AUDIO);
+            
+            mDecibelReadings = new ArrayList<Double>(); 
 
             AudioRecord record = new AudioRecord(AudioSource.MIC, SAMPLING_RATE,
                     AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, mBufferSize);
             record.startRecording();
 
-            while (shouldContinue()) {
+            for (int i = 0; i < NUM_CALIBRATION_SAMPLES; i++) {
                 record.read(mAudioBuffer, 0, mBufferSize / 2);
                 computeDecibelLevel();
             }
-
+            
             record.stop();
             record.release();
+            
+            mAverageDecibels /= (double)mDecibelReadings.size(); 
+            
+			Message msg = uiHandler.obtainMessage();
+			msg.obj = "Average DB: " + String.format(mDecibelFormat, mAverageDecibels); 
+			uiHandler.sendMessage(msg);
         }
 
         /**
@@ -426,6 +454,10 @@ public class PrepPresentationActivity extends Activity {
 
             double rms = Math.sqrt(sum / mAudioBuffer.length);
             final double db = 20 * Math.log10(rms);
+            
+            mDecibelReadings.add(db); 
+            
+            mAverageDecibels += db; 
 
             // Update the text view on the main thread.
             mHeadingView.post(new Runnable() {
