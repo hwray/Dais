@@ -165,17 +165,22 @@ public class PrepPresentationActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
+        mCalibrationThread = new SpeechCalibrationThread(); 
+        
         mRecordingThread = new RecordingThread();
         
-        mGazeThread = new GazeThread(); 
-        
-        mCalibrationThread = new SpeechCalibrationThread(); 
+        mGazeThread = new GazeThread();         
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
+        if (mCalibrationThread != null) {
+        	mCalibrationThread.stopRunning(); 
+        	mCalibrationThread = null; 
+        }
+        
         if (mRecordingThread != null) {
             mRecordingThread.stopRunning();
             mRecordingThread = null;
@@ -237,9 +242,15 @@ public class PrepPresentationActivity extends Activity {
                  		mHeadingView.setText("");                  		
                  	} else if (g.pres.mPrefVolume == 0) {
                  		mCalibrationThread.start(); 
-                 		
-                 		
-                 		//mGazeThread.start(); 
+                 	} else if (mCalibrationThread != null) {
+                 		return true; 
+                 	} else {
+                 		mTitleView.setText("");
+                 		mLeftHeadingView.setText(""); 
+                 		mRightHeadingView.setText(""); 
+                 		mHeadingView.setText(""); 
+                 		mGazeThread.start(); 
+                 		mRecordingThread.start(); 
                  	}
                     return true;
                  } else if (gesture == Gesture.TWO_TAP) {
@@ -271,13 +282,6 @@ public class PrepPresentationActivity extends Activity {
     	uiHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				String message = (String)msg.obj; 
-				if (message != null) {
-					// We've received a String message: 
-					// the average decibel level from SpeechCalibrationThread
-					mTitleView.setText(message); 
-				}
-				
 				if (msg.what == 0) {
 					mHeadingView.setText("Magnetic interference");
 				} else if (msg.what == 1) {
@@ -290,7 +294,10 @@ public class PrepPresentationActivity extends Activity {
 					mTitleView.setText("Face forward!"); 
 				} else if (msg.what == 5) {
 					mTitleView.setText(""); 
-				} 
+				} else if (msg.what == 6) {
+					mHeadingView.setText("Volume: " + g.pres.mPrefVolume);
+					mTitleView.setText("Calibration complete. Tap to start."); 
+				}
 			}
     	}; 
     }
@@ -418,9 +425,9 @@ public class PrepPresentationActivity extends Activity {
             
             mAverageDecibels /= (double)mDecibelReadings.size(); 
             
-			Message msg = uiHandler.obtainMessage();
-			msg.obj = "Average DB: " + String.format(mDecibelFormat, mAverageDecibels); 
-			uiHandler.sendMessage(msg);
+            g.pres.mPrefVolume = mAverageDecibels; 
+            
+			sendUIMessage(7); 
         }
 
         /**
