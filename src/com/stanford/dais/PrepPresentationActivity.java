@@ -238,9 +238,9 @@ public class PrepPresentationActivity extends Activity {
                  		g.pres.mCenterHeading = (g.pres.mLeftHeading + g.pres.mRightHeading) / 2; 
                  		
                  		mTitleView.setText("Tap and speak at desired volume"); 
-                 		mLeftHeadingView.setText("");
                  		mHeadingView.setText("");                  		
                  	} else if (g.pres.mPrefVolume == 0) {
+                 		mTitleView.setText("Calibrating speech volume..."); 
                  		mCalibrationThread.start(); 
                  	} else if (mCalibrationThread != null) {
                  		return true; 
@@ -295,7 +295,7 @@ public class PrepPresentationActivity extends Activity {
 				} else if (msg.what == 5) {
 					mTitleView.setText(""); 
 				} else if (msg.what == 6) {
-					mHeadingView.setText("Volume: " + g.pres.mPrefVolume);
+					mHeadingView.setText("Volume: " + String.format(mDecibelFormat, g.pres.mPrefVolume));
 					mTitleView.setText("Calibration complete. Tap to start."); 
 				}
 			}
@@ -427,7 +427,7 @@ public class PrepPresentationActivity extends Activity {
             
             g.pres.mPrefVolume = mAverageDecibels; 
             
-			sendUIMessage(7); 
+			sendUIMessage(6); 
         }
 
         /**
