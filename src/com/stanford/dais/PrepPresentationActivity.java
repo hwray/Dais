@@ -52,7 +52,8 @@ public class PrepPresentationActivity extends Activity {
     // The sampling rate for the audio recorder.
     private static final int SAMPLING_RATE = 44100;
     
-	private static final int NUM_CALIBRATION_SAMPLES = 100; 
+    private static final int NUM_BACKGROUND_CALIBRATION_SAMPLES = 100; 
+	private static final int NUM_SPEECH_CALIBRATION_SAMPLES = 100; 
     
     private OrientationManager mOrientationManager;        
     private boolean mInterference; 
@@ -110,6 +111,8 @@ public class PrepPresentationActivity extends Activity {
         this.g = (Globals) getApplication(); 
         
         g.clearGlobals(); 
+        g.pres.reset(); 
+        
         mInterference = false; 
         
         mMainView = (View) findViewById(R.id.prep_presentation_container); 
@@ -165,6 +168,8 @@ public class PrepPresentationActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        
+        g.pres.reset(); 
         
         mSpeechThread = new SpeechThread();
         
@@ -242,9 +247,9 @@ public class PrepPresentationActivity extends Activity {
                  		mTitleView.setText("Calibrating room volume..."); 
                  		mCalibrationThread = new CalibrationThread("floor"); 
                  		mCalibrationThread.start(); 
-                 	} else if (g.pres.mPrefVolume == 0 && mCalibrationThread == null) {
+                 	} else if (g.pres.mSpeechVolume == 0 && mCalibrationThread == null) {
                  		mTitleView.setText("Calibrating speech volume..."); 
-                 		mCalibrationThread = new CalibrationThread("pref"); 
+                 		mCalibrationThread = new CalibrationThread("speech"); 
                  		mCalibrationThread.start(); 
                  	} else if (mCalibrationThread != null) {
                  		return true; 
@@ -302,7 +307,7 @@ public class PrepPresentationActivity extends Activity {
 					mHeadingView.setText("Room: " + String.format(mDecibelFormat, g.pres.mFloorVolume));
 					mTitleView.setText("Tap and speak at desired volume"); 
 				} else if (msg.what == 7) {
-					mHeadingView.setText("Speech: " + String.format(mDecibelFormat, g.pres.mPrefVolume));
+					mHeadingView.setText("Speech: " + String.format(mDecibelFormat, g.pres.mSpeechVolume));
 					mTitleView.setText("Calibration complete. Tap to start."); 
 				}
 			}
@@ -428,7 +433,14 @@ public class PrepPresentationActivity extends Activity {
                     AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, mBufferSize);
             record.startRecording();
 
-            for (int i = 0; i < NUM_CALIBRATION_SAMPLES; i++) {
+            int limit = 0; 
+            if (type.equals("floor")) {
+            	limit = NUM_BACKGROUND_CALIBRATION_SAMPLES; 
+            } else if (type.equals("speech")) {
+            	limit = NUM_SPEECH_CALIBRATION_SAMPLES; 
+            }
+            
+            for (int i = 0; i < limit; i++) {
                 record.read(mAudioBuffer, 0, mBufferSize / 2);
                 computeDecibelLevel();
             }
@@ -441,8 +453,8 @@ public class PrepPresentationActivity extends Activity {
             if (type.equals("floor")) {
             	g.pres.mFloorVolume = mAverageDecibels; 
     			sendUIMessage(6); 
-            } else if (type.equals("pref")) {
-                g.pres.mPrefVolume = mAverageDecibels; 
+            } else if (type.equals("speech")) {
+                g.pres.mSpeechVolume = mAverageDecibels; 
     			sendUIMessage(7); 
             }
             			
@@ -554,7 +566,7 @@ public class PrepPresentationActivity extends Activity {
             double rms = Math.sqrt(sum / mAudioBuffer.length);
             final double db = 20 * Math.log10(rms);
             
-            if (db > g.pres.mFloorVolume && db < (g.pres.mPrefVolume - 5)) {
+            if (db > g.pres.mFloorVolume && db < (g.pres.mSpeechVolume - 5)) {
             	mNumMumbleSamples++; 
             } else {
             	mNumMumbleSamples = 0; 

@@ -21,7 +21,7 @@ public class Presentation {
 	public int mGazeSide;
 	
 	public double mFloorVolume; 
-	public double mPrefVolume; 
+	public double mSpeechVolume; 
 	
 	public int numSteps; 
 	
@@ -38,7 +38,7 @@ public class Presentation {
 		mGazeTime = 0; 
 		mGazeSide = 0; 
 		mFloorVolume = 0; 
-		mPrefVolume = 0; 
+		mSpeechVolume = 0; 
 		numSteps = 0; 
 		headings = new ArrayList<Float>();
 	}
@@ -52,7 +52,7 @@ public class Presentation {
 		mGazeTime = 0; 
 		mGazeSide = 0; 
 		mFloorVolume = 0; 
-		mPrefVolume = 0; 
+		mSpeechVolume = 0; 
 		numSteps = 0; 
 		headings = new ArrayList<Float>();
 	}
@@ -79,7 +79,7 @@ public class Presentation {
 			Firebase connection = new Firebase("https://dais.firebaseio.com/" + identifier);
 			Firebase childConnection = connection.push();
 			childConnection.setValue(pres.toMap());
-			pres.reset();
+			//pres.reset();
 		}
 		
 	}
