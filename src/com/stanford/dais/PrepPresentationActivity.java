@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.http.Header;
+
 import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
@@ -16,10 +17,14 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.AudioFormat;
 import android.media.AudioManager;
+import android.media.AudioRecord;
+import android.media.MediaRecorder.AudioSource;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -43,6 +48,9 @@ public class PrepPresentationActivity extends Activity {
     private static final float TOO_LONG_GAZE_TIME = 100.0f; 
     private static final float TOO_STEEP_PITCH_DEGREES = 10.0f;
     
+    // The sampling rate for the audio recorder.
+    private static final int SAMPLING_RATE = 44100;
+    
     private OrientationManager mOrientationManager;        
     private boolean mInterference; 
     
@@ -52,6 +60,12 @@ public class PrepPresentationActivity extends Activity {
     private StepDetector mStepDetector; 
     
     private GestureDetector mGestureDetector;
+    
+    private int mBufferSize;
+    private short[] mAudioBuffer;
+    private String mDecibelFormat;
+    
+    private RecordingThread mRecordingThread;
     
     private Thread mGazeThread;  
     
@@ -132,10 +146,46 @@ public class PrepPresentationActivity extends Activity {
                 mSensor,
                 SensorManager.SENSOR_DELAY_FASTEST);
         
+        // Compute the minimum required audio buffer size and allocate the buffer.
+        mBufferSize = AudioRecord.getMinBufferSize(SAMPLING_RATE, AudioFormat.CHANNEL_IN_MONO,
+                AudioFormat.ENCODING_PCM_16BIT);
+        mAudioBuffer = new short[mBufferSize / 2];
+
+        mDecibelFormat = getResources().getString(R.string.decibel_format);
+        
+        
         initHandler(); 
-        //initFirebase(); 
     }
     
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mRecordingThread = new RecordingThread();
+        mRecordingThread.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (mRecordingThread != null) {
+            mRecordingThread.stopRunning();
+            mRecordingThread = null;
+        }
+    }
+    
+    
+    /*
+     * Send generic motion events to the gesture detector
+     */
+    @Override
+    public boolean onGenericMotionEvent(MotionEvent event) {
+        if (mGestureDetector != null) {
+            return mGestureDetector.onMotionEvent(event);
+        }
+        return false;
+    }
     
     private GestureDetector createGestureDetector(Context context) {    	
         GestureDetector gestureDetector = new GestureDetector(context);
@@ -211,25 +261,17 @@ public class PrepPresentationActivity extends Activity {
 					mTitleView.setText("Face forward!"); 
 				} else if (msg.what == 5) {
 					mTitleView.setText(""); 
-				}
+				} 
 			}
     	}; 
     }
     
-    public void initFirebase() {
-
-    }
+    public void sendUIMessage(int msg) {
+		Message message = uiHandler.obtainMessage(); 
+		message.what = msg; 
+		uiHandler.sendMessage(message);
+	}
     
-    /*
-     * Send generic motion events to the gesture detector
-     */
-    @Override
-    public boolean onGenericMotionEvent(MotionEvent event) {
-        if (mGestureDetector != null) {
-            return mGestureDetector.onMotionEvent(event);
-        }
-        return false;
-    }
 
     private void initGazeThread() {
 		mGazeThread = new Thread() {
@@ -295,10 +337,73 @@ public class PrepPresentationActivity extends Activity {
 		};
 		mGazeThread.start(); 
     }
+     
     
-    public void sendUIMessage(int msg) {
-		Message message = uiHandler.obtainMessage(); 
-		message.what = msg; 
-		uiHandler.sendMessage(message);
-	}
+    /**
+     * A background thread that receives audio from the microphone and sends it to the waveform
+     * visualizing view.
+     */
+    private class RecordingThread extends Thread {
+
+        private boolean mShouldContinue = true;
+
+        @Override
+        public void run() {
+            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_AUDIO);
+
+            AudioRecord record = new AudioRecord(AudioSource.MIC, SAMPLING_RATE,
+                    AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, mBufferSize);
+            record.startRecording();
+
+            while (shouldContinue()) {
+                record.read(mAudioBuffer, 0, mBufferSize / 2);
+                updateDecibelLevel();
+            }
+
+            record.stop();
+            record.release();
+        }
+
+        /**
+         * Gets a value indicating whether the thread should continue running.
+         *
+         * @return true if the thread should continue running or false if it should stop
+         */
+        private synchronized boolean shouldContinue() {
+            return mShouldContinue;
+        }
+
+        /** Notifies the thread that it should stop running at the next opportunity. */
+        public synchronized void stopRunning() {
+            mShouldContinue = false;
+        }
+
+        /**
+         * Computes the decibel level of the current sound buffer and updates the appropriate text
+         * view.
+         */
+        private void updateDecibelLevel() {
+            // Compute the root-mean-squared of the sound buffer and then apply the formula for
+            // computing the decibel level, 20 * log_10(rms). This is an uncalibrated calculation
+            // that assumes no noise in the samples; with 16-bit recording, it can range from
+            // -90 dB to 0 dB.
+            double sum = 0;
+
+            for (short rawSample : mAudioBuffer) {
+                double sample = rawSample / 32768.0;
+                sum += sample * sample;
+            }
+
+            double rms = Math.sqrt(sum / mAudioBuffer.length);
+            final double db = 20 * Math.log10(rms);
+
+            // Update the text view on the main thread.
+            mHeadingView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mHeadingView.setText(String.format(mDecibelFormat, db));
+                }
+            });
+        }
+    }
 }
