@@ -1,3 +1,5 @@
+/* Deprecated: Used only for the demo - Refer to the Presentation.js file */
+
 firebaseRef = new Firebase("https://dais.firebaseio.com/demo/");
 
 presentations = [];
