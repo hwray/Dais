@@ -7,18 +7,11 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.11/firebase.js'></script>
   <script src="js/Presentation.js"></script>
-<script>
-presentations = [];
-demoRef = new Firebase("https://dais.firebaseio.com/demo");
-demoRef.on("value", function(snapshot) {
-  presentationObjects = snapshot.val();
-  for (var key in presentationObjects) {
-    newPres = new Presentation(presentationObjects[key]);
-    presentations.push(newPres);
-  }
-  console.log(presentations);
-  document.body.appendChild(presentations[presentations.length-1].displayHeatMap());
-});
+  <script>
+  var demoUsername = "daisglass";
+  getPresentationsByUsername(username, function(presentations) {
+    document.body.appendChild(presentations[presentations.length-1].displayHeatMap());
+  });
 
 </script>
 </body>
