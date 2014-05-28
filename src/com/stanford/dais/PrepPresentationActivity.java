@@ -44,6 +44,8 @@ public class PrepPresentationActivity extends Activity {
 
 	private TextView mLeftHeadingView; 
 	private TextView mRightHeadingView; 
+	
+	private boolean liveFeedbackMode; 
 
 	private static final int MUMBLE_TIME_THRESHOLD = 20; 
     private static final float GAZE_TIME_THRESHOLD = 100.0f; 
@@ -292,15 +294,20 @@ public class PrepPresentationActivity extends Activity {
 			@Override
 			public void handleMessage(Message msg) {
 				if (msg.what == 0) {
-					mHeadingView.setText("Magnetic interference");
+					if (liveFeedbackMode)
+						mHeadingView.setText("Magnetic interference");
 				} else if (msg.what == 1) {
-	        		mTitleView.setText("Look up!"); 
+					if (liveFeedbackMode)
+						mTitleView.setText("Look up!"); 
 				} else if (msg.what == 2) {
-    				mTitleView.setText("Look right!"); 
+					if (liveFeedbackMode)
+						mTitleView.setText("Look right!"); 
 				} else if (msg.what == 3) {
-    				mTitleView.setText("Look left!");
+					if (liveFeedbackMode)
+						mTitleView.setText("Look left!");
 				} else if (msg.what == 4) {
-					mTitleView.setText("Face forward!"); 
+					if (liveFeedbackMode)
+						mTitleView.setText("Face forward!"); 
 				} else if (msg.what == 5) {
 					mTitleView.setText(""); 
 				} else if (msg.what == 6) {
@@ -310,7 +317,8 @@ public class PrepPresentationActivity extends Activity {
 					mHeadingView.setText("Speech: " + String.format(mDecibelFormat, g.pres.mSpeechVolume));
 					mTitleView.setText("Calibration complete. Tap to start."); 
 				} else if (msg.what == 8) {
-					mTitleView.setText("Speak up!"); 
+					if (liveFeedbackMode)
+						mTitleView.setText("Speak up!"); 
 				}
 			}
     	}; 
