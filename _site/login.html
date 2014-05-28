@@ -49,7 +49,6 @@
     <button type="button" class="btn btn-primary pull-right" id="disconnect" >Logout</button>
 
     <div id="email"></div>
-    <button id="presentButton">View Presentations</button>
   </div>
 
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
@@ -57,19 +56,24 @@
 
   $(document).ready(function() {
     $('#disconnect').click(logout);
-    $('#presentButton').click(showPresentations);
   });
 
   function showPresentations(){
     getPresentationsByUsername(username, function(presentations) { 
+
       var heatMapContainer = document.createElement("div");
-      heatMapContainer.className = 'container-fluid';
+      heatMapContainer.className = 'row-fluid';
       heatMapContainer.className = 'heatmap-container';
       document.body.appendChild(heatMapContainer);
 
+      if(presentations.length == 0){
+        heatMapContainer.innerHTML ='<p>Sorry, no presentation data found!</p>';
+      }
+
       for(var i=0; i<presentations.length; i++){
-       heatMapContainer.appendChild(presentations[i].displayHeatMap());
-       // $(heatMapContainer.lastChild).addClass('col-sm-4');
+        heatMapContainer.appendChild(presentations[i].displayHeatMap());
+        var hm = heatMapContainer.lastChild;
+        hm.className = hm.className + ' col-sm-4';
       }
     });
   }
@@ -125,6 +129,7 @@
     username = email_array[0];
 
     displayProfile(profile);
+    showPresentations();
   }
 
   /**
