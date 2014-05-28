@@ -7,12 +7,12 @@ import com.firebase.client.*;
 
 public class Presentation {
 	
+	private Firebase connection;
+	
 	public String identifier;
 	public float mLeftHeading; 
 	public float mRightHeading; 
 	public float mCenterHeading;
-	public ArrayList<Float> orientations;
-	private Firebase connection;
 	
 	public float mLeftTime; 
 	public float mRightTime;  
@@ -22,6 +22,11 @@ public class Presentation {
 	
 	public double mFloorVolume; 
 	public double mSpeechVolume; 
+	public double mMumbleVolume; 
+	
+	public ArrayList<Float> orientations;	
+
+	public ArrayList<Double> decibels; 
 	
 	public int numSteps; 
 	
@@ -39,8 +44,10 @@ public class Presentation {
 		mGazeSide = 0; 
 		mFloorVolume = 0; 
 		mSpeechVolume = 0; 
+		mMumbleVolume = 0; 
 		numSteps = 0; 
 		headings = new ArrayList<Float>();
+		decibels = new ArrayList<Double>(); 
 	}
 	
 	public void reset() {
@@ -53,8 +60,10 @@ public class Presentation {
 		mGazeSide = 0; 
 		mFloorVolume = 0; 
 		mSpeechVolume = 0; 
+		mMumbleVolume = 0; 
 		numSteps = 0; 
 		headings = new ArrayList<Float>();
+		decibels = new ArrayList<Double>(); 
 	}
 	
 	public Map<String, Presentation> toMap() {

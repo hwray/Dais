@@ -45,15 +45,15 @@ public class PrepPresentationActivity extends Activity {
 	private TextView mLeftHeadingView; 
 	private TextView mRightHeadingView; 
 
-	private static final int MUMBLE_TIME_THRESHOLD = 30; 
+	private static final int MUMBLE_TIME_THRESHOLD = 20; 
     private static final float GAZE_TIME_THRESHOLD = 100.0f; 
     private static final float GAZE_PITCH_THRESHOLD = 10.0f;
     
     // The sampling rate for the audio recorder.
     private static final int SAMPLING_RATE = 44100;
     
-    private static final int NUM_BACKGROUND_CALIBRATION_SAMPLES = 100; 
-	private static final int NUM_SPEECH_CALIBRATION_SAMPLES = 100; 
+    private static final int NUM_BACKGROUND_CALIBRATION_SAMPLES = 50; 
+	private static final int NUM_SPEECH_CALIBRATION_SAMPLES = 50; 
     
     private OrientationManager mOrientationManager;        
     private boolean mInterference; 
@@ -309,6 +309,8 @@ public class PrepPresentationActivity extends Activity {
 				} else if (msg.what == 7) {
 					mHeadingView.setText("Speech: " + String.format(mDecibelFormat, g.pres.mSpeechVolume));
 					mTitleView.setText("Calibration complete. Tap to start."); 
+				} else if (msg.what == 8) {
+					mTitleView.setText("Speak up!"); 
 				}
 			}
     	}; 
@@ -455,6 +457,7 @@ public class PrepPresentationActivity extends Activity {
     			sendUIMessage(6); 
             } else if (type.equals("speech")) {
                 g.pres.mSpeechVolume = mAverageDecibels; 
+                g.pres.mMumbleVolume = (g.pres.mFloorVolume + g.pres.mSpeechVolume) / (double)2; 
     			sendUIMessage(7); 
             }
             			
@@ -566,14 +569,18 @@ public class PrepPresentationActivity extends Activity {
             double rms = Math.sqrt(sum / mAudioBuffer.length);
             final double db = 20 * Math.log10(rms);
             
-            if (db > g.pres.mFloorVolume && db < (g.pres.mSpeechVolume - 5)) {
+            g.pres.decibels.add(db); 
+            
+            if (db > (g.pres.mFloorVolume - 3) && db < g.pres.mMumbleVolume) {
             	mNumMumbleSamples++; 
+            	
             } else {
-            	mNumMumbleSamples = 0; 
+            	mNumMumbleSamples -= 5; 
+            	sendUIMessage(5); 
             }
             
             if (mNumMumbleSamples > MUMBLE_TIME_THRESHOLD) {
-            	
+            	sendUIMessage(8); 
             }
         }
     }
