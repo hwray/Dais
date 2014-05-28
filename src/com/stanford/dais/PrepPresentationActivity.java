@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.ImageView;
 import android.os.Build;
 
 import com.firebase.client.*;
@@ -56,6 +57,10 @@ public class PrepPresentationActivity extends Activity {
     
     private static final int NUM_BACKGROUND_CALIBRATION_SAMPLES = 50; 
 	private static final int NUM_SPEECH_CALIBRATION_SAMPLES = 50; 
+
+	private ImageView mUpArrow;
+	private ImageView mRightArrow;
+	private ImageView mLeftArrow;
     
     private OrientationManager mOrientationManager;        
     private boolean mInterference; 
@@ -78,6 +83,7 @@ public class PrepPresentationActivity extends Activity {
     private GazeThread mGazeThread;  
     
     private Handler uiHandler;
+  
 
     /* FIREBASE GLOBALS */
      Firebase connection;
@@ -125,7 +131,15 @@ public class PrepPresentationActivity extends Activity {
         
         mLiveFeedbackMode = getIntent().getExtras().getBoolean("liveFeedbackMode");
 
-        
+        /* Arrow Images */
+        mUpArrow = (ImageView) findViewById(R.id.up_arrow);
+        mLeftArrow = (ImageView) findViewById(R.id.left_arrow);
+        mRightArrow = (ImageView) findViewById(R.id.right_arrow); 
+
+        mUpArrow.setVisibility(View.GONE);
+        mLeftArrow.setVisibility(View.GONE);
+        mRightArrow.setVisibility(View.GONE);
+
         mGestureDetector = createGestureDetector(this); 
         
         mSensorManager =
@@ -296,18 +310,28 @@ public class PrepPresentationActivity extends Activity {
     	uiHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
+				mUpArrow.setVisibility(View.GONE);
+		        mLeftArrow.setVisibility(View.GONE);
+		        mRightArrow.setVisibility(View.GONE);
+		        
 				if (msg.what == 0) {
 					if (mLiveFeedbackMode)
 						mHeadingView.setText("Magnetic interference");
 				} else if (msg.what == 1) {
-					if (mLiveFeedbackMode)
-						mTitleView.setText("Look up!"); 
+					if (mLiveFeedbackMode){
+				        mUpArrow.setVisibility(View.VISIBLE);
+				        //mTitleView.setText("Look up!");
+					}
 				} else if (msg.what == 2) {
-					if (mLiveFeedbackMode)
-						mTitleView.setText("Look right!"); 
+					if (mLiveFeedbackMode){
+				        mRightArrow.setVisibility(View.VISIBLE);
+				        //mTitleView.setText("Look right!");
+					}
 				} else if (msg.what == 3) {
-					if (mLiveFeedbackMode)
-						mTitleView.setText("Look left!");
+					if (mLiveFeedbackMode){
+				        mLeftArrow.setVisibility(View.VISIBLE);
+				        //mTitleView.setText("Look left!");
+					}
 				} else if (msg.what == 4) {
 					if (mLiveFeedbackMode)
 						mTitleView.setText("Face forward!"); 
