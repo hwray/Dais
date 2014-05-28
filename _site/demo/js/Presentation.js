@@ -1,24 +1,36 @@
-function Presentation(pres) {
-  this.mRightHeading = pres.mRightHeading;
-  this.mCenterHeading = pres.mCenterHeading;
-  this.mLeftHeading = pres.mLeftHeading;
-  this.orientations = pres.orientations;
-  if (typeof(pres.presentation) != 'undefined') {
-    this.orientations = pres.presentation.headings;
-    this.mRightHeading = pres.presentation.mRightHeading;
-    this.mCenterHeading = pres.presentation.mCenterHeading;
-    this.mLeftHeading = pres.presentation.mLeftHeading;
-  }
+/* Function: getAllPresentationsByUsername
+ * Fetches all the presentations associated with a username.
+ * param username - the username identifier
+ * param callback - function called with presentation array as single parameter
+ */
+function getAllPresentationsByUsername(username, callback) {
+  username = username.replace(".", "");
+  firebaseRef = new Firebase("https://dais.firebaseio.com/" + username);
+  firebaseRef.on("value", function(snapshot) {
+    presentationObjects = snapshot.val();
+    presentations = [];
+    for (var key in presentationObjects) {
+      var presentation = new Presentation(presentationObjects[key].presentation);
+      presentations.push(presentation);
+    }
+    callback(presentations);
+  });
 }
-
 
 /* Presentation Global Constants */
 Presentation.prototype.NUM_SEGMENTS = 25;
 
+/* Presentation Constructor and Prototypes */
+function Presentation(pres) {
+  this.mRightHeading = pres.mRightHeading;
+  this.mCenterHeading = pres.mCenterHeading;
+  this.mLeftHeading = pres.mLeftHeading;
+  this.orientations = pres.headings;
+}
+
 Presentation.prototype.displayHeatMap = function() {
   // sort orientations
   this.orientations.sort();
-
 
   // countOrientationsBySegment()
   segmentCounters = [];
