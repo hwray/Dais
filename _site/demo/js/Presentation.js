@@ -3,7 +3,7 @@
  * param username - the username identifier
  * param callback - function called with presentation array as single parameter
  */
-function getAllPresentationsByUsername(username, callback) {
+function getPresentationsByUsername(username, callback) {
   username = username.replace(".", "");
   firebaseRef = new Firebase("https://dais.firebaseio.com/" + username);
   firebaseRef.on("value", function(snapshot) {
@@ -26,6 +26,11 @@ function Presentation(pres) {
   this.mCenterHeading = pres.mCenterHeading;
   this.mLeftHeading = pres.mLeftHeading;
   this.orientations = pres.headings;
+  this.decibels = pres.decibels;
+  this.mFloorVolume = pres.mFloorVolume;
+  this.mMumbleVolume = pres.mMumbleVolume;
+  this.mSpeechVolume = pres.mSpeechVolume;
+  this.numSteps = pres.numSteps;
 }
 
 Presentation.prototype.displayHeatMap = function() {

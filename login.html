@@ -3,7 +3,8 @@ layout: default
 title: Dais | Log in with Google
 ---
 
-<link href="http://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="demo/css/style.css">
+
 
 <div id="signin-button" class="show">
      <div class="g-signin"
@@ -24,6 +25,7 @@ title: Dais | Log in with Google
     <button type="button" class="btn btn-primary pull-right" id="disconnect" >Logout</button>
 
     <div id="email"></div>
+    <button id="presentButton">View Presentations</button>
   </div>
 
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
@@ -31,8 +33,22 @@ title: Dais | Log in with Google
 
   $(document).ready(function() {
     $('#disconnect').click(logout);
+    $('#presentButton').click(showPresentations);
   });
 
+  function showPresentations(){
+    getPresentationsByUsername(username, function(presentations) { 
+      var heatMapContainer = document.createElement("div");
+      heatMapContainer.className = 'container-fluid';
+      heatMapContainer.className = 'heatmap-container';
+      document.body.appendChild(heatMapContainer);
+
+      for(var i=0; i<presentations.length; i++){
+       heatMapContainer.appendChild(presentations[i].displayHeatMap());
+       // $(heatMapContainer.lastChild).addClass('col-sm-4');
+      }
+    });
+  }
 
   /**
    * Global variables to hold the profile and email data.
@@ -83,7 +99,6 @@ title: Dais | Log in with Google
 
     var email_array = email.split('@');
     username = email_array[0];
-    console.log(username);
 
     displayProfile(profile);
   }
@@ -122,8 +137,7 @@ title: Dais | Log in with Google
         dataType: 'jsonp',
         success: function(result) {
           console.log('revoke response: ' + result);
-          $('#profile').empty();
-          $('#authResult').empty();
+          toggleElement('profile');
           toggleElement('signin-button');
         },
         error: function(e) {
@@ -133,3 +147,13 @@ title: Dais | Log in with Google
   }
   </script>
   <script src="https://apis.google.com/js/client:plusone.js" type="text/javascript"></script>
+  <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.11/firebase.js'></script>
+  <script src='demo/js/Presentation.js' />
+
+  <script type="text/javascript">
+  // getAllPresentationsByUsername(username, print);
+
+  function print(presentation){
+    console.log(presentation);
+  }
+</script>
