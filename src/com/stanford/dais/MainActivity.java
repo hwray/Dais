@@ -101,11 +101,20 @@ public class MainActivity extends Activity {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        startPrepPresentation();
+                        startPrepPresentation(true);
                     }
                 });
                 return true;
 
+            case R.id.prep_no_feedback:
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        startPrepPresentation(false);
+                    }
+                });
+                return true;
+                
             case R.id.view_data:
                 mHandler.post(new Runnable() {
                     @Override
@@ -125,8 +134,12 @@ public class MainActivity extends Activity {
      * but does not finish this activity so that the splash screen
      * reappears when the user is done viewing data. 
      */
-    private void startPrepPresentation() {
-        startActivity(new Intent(this, PrepPresentationActivity.class));
+    private void startPrepPresentation(boolean liveFeedbackMode) {
+    	Intent intent = new Intent(this, PrepPresentationActivity.class); 
+    	Bundle bundle = new Bundle(); 
+    	bundle.putBoolean("liveFeedbackMode", liveFeedbackMode);
+    	intent.putExtras(bundle); 
+        startActivity(intent);
     }
 
     /**

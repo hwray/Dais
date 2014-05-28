@@ -45,7 +45,7 @@ public class PrepPresentationActivity extends Activity {
 	private TextView mLeftHeadingView; 
 	private TextView mRightHeadingView; 
 	
-	private boolean liveFeedbackMode; 
+	private boolean mLiveFeedbackMode; 
 
 	private static final int MUMBLE_TIME_THRESHOLD = 20; 
     private static final float GAZE_TIME_THRESHOLD = 100.0f; 
@@ -122,6 +122,9 @@ public class PrepPresentationActivity extends Activity {
         mTitleView = (TextView) findViewById(R.id.instructions_and_feedback); 
         mLeftHeadingView = (TextView) findViewById(R.id.left_heading); 
         mRightHeadingView = (TextView) findViewById(R.id.right_heading); 
+        
+        mLiveFeedbackMode = getIntent().getExtras().getBoolean("liveFeedbackMode");
+
         
         mGestureDetector = createGestureDetector(this); 
         
@@ -294,19 +297,19 @@ public class PrepPresentationActivity extends Activity {
 			@Override
 			public void handleMessage(Message msg) {
 				if (msg.what == 0) {
-					if (liveFeedbackMode)
+					if (mLiveFeedbackMode)
 						mHeadingView.setText("Magnetic interference");
 				} else if (msg.what == 1) {
-					if (liveFeedbackMode)
+					if (mLiveFeedbackMode)
 						mTitleView.setText("Look up!"); 
 				} else if (msg.what == 2) {
-					if (liveFeedbackMode)
+					if (mLiveFeedbackMode)
 						mTitleView.setText("Look right!"); 
 				} else if (msg.what == 3) {
-					if (liveFeedbackMode)
+					if (mLiveFeedbackMode)
 						mTitleView.setText("Look left!");
 				} else if (msg.what == 4) {
-					if (liveFeedbackMode)
+					if (mLiveFeedbackMode)
 						mTitleView.setText("Face forward!"); 
 				} else if (msg.what == 5) {
 					mTitleView.setText(""); 
@@ -317,7 +320,7 @@ public class PrepPresentationActivity extends Activity {
 					mHeadingView.setText("Speech: " + String.format(mDecibelFormat, g.pres.mSpeechVolume));
 					mTitleView.setText("Calibration complete. Tap to start."); 
 				} else if (msg.what == 8) {
-					if (liveFeedbackMode)
+					if (mLiveFeedbackMode)
 						mTitleView.setText("Speak up!"); 
 				}
 			}
