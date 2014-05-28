@@ -9,7 +9,7 @@
   <script src="js/Presentation.js"></script>
   <script>
   var demoUsername = "daisglass";
-  getPresentationsByUsername(username, function(presentations) {
+  getPresentationsByUsername(demoUsername, function(presentations) {
     document.body.appendChild(presentations[presentations.length-1].displayHeatMap());
   });
 
