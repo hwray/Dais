@@ -31,10 +31,13 @@ function Presentation(pres) {
   this.mMumbleVolume = pres.mMumbleVolume;
   this.mSpeechVolume = pres.mSpeechVolume;
   this.numSteps = pres.numSteps;
+  this.timeStamp = new Date().getTime();
 }
 
 Presentation.prototype.displayHeatMap = function() {
   // sort orientations
+  if(!this.orientations)
+    return;
   this.orientations.sort();
 
   // countOrientationsBySegment()

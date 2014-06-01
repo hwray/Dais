@@ -35,6 +35,8 @@ function Presentation(pres) {
 
 Presentation.prototype.displayHeatMap = function() {
   // sort orientations
+  if(!this.orientations)
+    return;
   this.orientations.sort();
 
   // countOrientationsBySegment()
