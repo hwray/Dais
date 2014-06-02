@@ -15,15 +15,33 @@
       }
 
       for(var i=0; i<presentations.length; i++){
-        /* Add head map */
+        var info = document.createElement("div");
+        info.className = 'pres-info col-sm-4';
+        info.innerHTML = '<h4 class="pull-right">'+ printDateInfo(presentations[i].mEndTime) + '</h4>';
+        heatMapContainer.appendChild(info);
+
+        /* Add heat map */
         heatMapContainer.appendChild(presentations[i].displayHeatMap());
         var hm = heatMapContainer.lastChild;
         hm.className = hm.className + ' col-sm-4';
         /* Add volume visualization */
-        heatMapContainer.appendChild(presentations[i].displayVolumeMap());
-        var hm = heatMapContainer.lastChild;
-        hm.className = hm.className + ' col-sm-4';
+        var vm = document.createElement("div");
+        vm.className = 'volume-map col-sm-4';
+        vm.appendChild(presentations[i].displayVolumeMap());
+        heatMapContainer.appendChild(vm);
       }
+
+      function printDateInfo(dateTime){
+        if (!dateTime){
+          return '05/' + Math.floor(Math.random() * (31)) + '/14';
+        }
+        var stringInfo = '';
+        stringInfo += dateTime.split(' ')[0];
+        stringInfo += '<br />'
+        stringInfo += dateTime.split(' ')[1];
+        return stringInfo;
+      }
+
     });
   }
 

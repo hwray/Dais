@@ -85,16 +85,15 @@ Presentation.prototype.displayHeatMap = function() {
 }
 
 Presentation.prototype.displayVolumeMap = function(){
-  var FIXED_HEIGHT = 100;
+  var FIXED_HEIGHT = 150;
   var Y_AXIS_SECTIONS = 4;
   var X_AXIS_SEPARATIONS = 40;
 
   var soundHeights = [];
 
   var container = document.createElement("canvas");
-  container.xPadding = 30;
-  container.yPadding = 30;
   container.style.background = 'white';
+  container.height = 200;
 
   var decibels = this.decibels;
   var loudest = Math.max.apply(Math, decibels);

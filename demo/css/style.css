@@ -1,5 +1,5 @@
 .heat-map {
-  height: 400px;
+  height: 200px;
   padding: 10px;
 }
 
@@ -7,4 +7,9 @@
   height: 100%;
   width: 4%;
   float: left;
+}
+
+.volume-map {
+  height: 200px;
+  padding: 10px;
 }
