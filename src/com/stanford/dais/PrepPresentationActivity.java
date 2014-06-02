@@ -171,11 +171,7 @@ public class PrepPresentationActivity extends Activity {
     protected void onResume() {
         super.onResume();
         
-        g.pres.reset(); 
-        
-        mSpeechThread = new SpeechThread();
-        
-        mGazeThread = new GazeThread();         
+        g.pres.reset();    
     }
 
     @Override
@@ -255,7 +251,7 @@ public class PrepPresentationActivity extends Activity {
                  		mCalibrationThread.start(); 
                  	} else if (mCalibrationThread != null) {
                  		return true; 
-                 	} else {
+                 	} else if (mGazeThread == null && mSpeechThread == null) {
                  		// Set start time for presentation
                  		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
                  		Date date = new Date();
@@ -265,10 +261,15 @@ public class PrepPresentationActivity extends Activity {
                  		mLeftHeadingView.setText(""); 
                  		mRightHeadingView.setText(""); 
                  		mHeadingView.setText(""); 
+                 		
+                        mGazeThread = new GazeThread();      
                  		mGazeThread.start(); 
+                 		
+                        mSpeechThread = new SpeechThread();
                  		mSpeechThread.start(); 
+                 	} else {
+                 		return true;
                  	}
-                    return true;
                  } else if (gesture == Gesture.TWO_TAP) {
                      // do something on two finger tap
                      return true;
