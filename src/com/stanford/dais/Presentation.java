@@ -10,6 +10,10 @@ public class Presentation {
 	private Firebase connection;
 	
 	public String identifier;
+	
+	public String mStartTime; 
+	public String mEndTime; 
+	
 	public float mLeftHeading; 
 	public float mRightHeading; 
 	public float mCenterHeading;
@@ -24,17 +28,18 @@ public class Presentation {
 	public double mSpeechVolume; 
 	public double mMumbleVolume; 
 	
+	
 	public ArrayList<Float> orientations;	
 
 	public ArrayList<Double> decibels; 
-	
-	public int numSteps; 
 	
 	// Real Talk
 	public ArrayList<Float> headings; 
 	
 	public Presentation(String identifier) {
 		this.identifier = identifier;
+		mStartTime = ""; 
+		mEndTime = ""; 
 		mLeftHeading = 0;
 		mRightHeading = 0;
 		mCenterHeading = 0;
@@ -43,14 +48,15 @@ public class Presentation {
 		mGazeTime = 0; 
 		mGazeSide = 0; 
 		mFloorVolume = 0; 
-		mSpeechVolume = 0; 
+		mSpeechVolume = 0; 	
 		mMumbleVolume = 0; 
-		numSteps = 0; 
 		headings = new ArrayList<Float>();
 		decibels = new ArrayList<Double>(); 
 	}
 	
 	public void reset() {
+		mStartTime = ""; 
+		mEndTime = ""; 
 		mLeftHeading = 0;
 		mRightHeading = 0;
 		mCenterHeading = 0;
@@ -61,7 +67,6 @@ public class Presentation {
 		mFloorVolume = 0; 
 		mSpeechVolume = 0; 
 		mMumbleVolume = 0; 
-		numSteps = 0; 
 		headings = new ArrayList<Float>();
 		decibels = new ArrayList<Double>(); 
 	}

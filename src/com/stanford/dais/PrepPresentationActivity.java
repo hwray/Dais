@@ -1,7 +1,11 @@
 package com.stanford.dais; 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.http.Header;
 
@@ -252,6 +256,11 @@ public class PrepPresentationActivity extends Activity {
                  	} else if (mCalibrationThread != null) {
                  		return true; 
                  	} else {
+                 		// Set start time for presentation
+                 		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
+                 		Date date = new Date();
+                 		g.pres.mStartTime = dateFormat.format(date);
+                 		
                  		mTitleView.setText("");
                  		mLeftHeadingView.setText(""); 
                  		mRightHeadingView.setText(""); 
@@ -270,6 +279,12 @@ public class PrepPresentationActivity extends Activity {
                      // do something on left (backwards) swipe
                      return true;
                  } else if (gesture == Gesture.SWIPE_DOWN) {
+                	 
+              		// Set end time for presentation
+              		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
+              		Date date = new Date();
+              		g.pres.mEndTime = dateFormat.format(date);
+                	 
                 	 if (mCalibrationThread != null) 
                 		 mCalibrationThread.stopRunning(); 
                 	 if (mSpeechThread != null)
