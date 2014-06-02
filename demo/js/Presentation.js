@@ -85,7 +85,15 @@ Presentation.prototype.displayHeatMap = function() {
 }
 
 Presentation.prototype.displayVolumeMap = function(){
+  var FIXED_HEIGHT = 100;
+  var Y_AXIS_SECTIONS = 4;
+  var X_AXIS_SEPARATIONS = 40;
+
+  var soundHeights = [];
+
   var container = document.createElement("canvas");
+  container.xPadding = 30;
+  container.yPadding = 30;
   container.style.background = 'white';
 
   var decibels = this.decibels;
@@ -101,42 +109,74 @@ Presentation.prototype.displayVolumeMap = function(){
 
   if(container.getContext){
     var ctx = container.getContext('2d');
+
+    // draw axes
+    ctx.lineWidth = 2;
+    drawHorizontalLine(ctx, '#000', 0, numDecibels);
+    drawVerticalLine(ctx, '#000', FIXED_HEIGHT, 0);
+
+    ctx.lineWidth = 1;
+    // background volume
+    drawHorizontalLine(ctx, '#0f0', backgroundVolume, numDecibels);
+    // desired volume 
+    drawHorizontalLine(ctx, '#00f', desiredVolume, numDecibels);
+
+    // draw line graph
     ctx.strokeStyle = '#f00';
     ctx.beginPath();
-    ctx.moveTo(0,0);
+    ctx.moveTo(getXCoordinate(0),0);
 
     for(var i=0; i< numDecibels; i++){
       var ratio = Math.abs((decibels[i] - softest) / range);
-      var height = ratio*100;
-      ctx.lineTo(i, Math.round(height));
+      var height = FIXED_HEIGHT - ratio*FIXED_HEIGHT;
+      soundHeights[i] = height;
+      ctx.lineTo(getXCoordinate(i), getYCoordinate(Math.round(height)));
     }
+
+    // decibel labels
+    for(var i=0; i< Y_AXIS_SECTIONS; i++){
+      var amount = softest + (i/Y_AXIS_SECTIONS *range);
+      ctx.fillText( i + ' dB', getXCoordinate(-30),  getYCoordinate(FIXED_HEIGHT - i/Y_AXIS_SECTIONS*FIXED_HEIGHT));
+    }
+
+    // time labels
+    ctx.fillText('Time in Presentation (MM:SS)', numDecibels/4 ,getYCoordinate(FIXED_HEIGHT + 30));
+    for(var i=0; i< numDecibels; i += X_AXIS_SEPARATIONS){
+      var minutes = Math.floor(i/50);
+      var seconds = Math.floor(i % 50);
+      ctx.fillText( minutes + ':' +seconds, getXCoordinate(i),  getYCoordinate(FIXED_HEIGHT + 15));
+    }
+
     ctx.stroke();
 
-    // background volume 
-    ctx.strokeStyle = '#0f0';
-    ctx.beginPath();
-    ctx.moveTo(0, Math.round(backgroundVolume * 100));
-    ctx.lineTo(numDecibels, Math.round(backgroundVolume * 100));
-    ctx.stroke();
-
-    // desired volume 
-    ctx.strokeStyle = '#00f';
-    ctx.beginPath();
-    ctx.moveTo(0, Math.round(desiredVolume * 100));
-    ctx.lineTo(numDecibels, Math.round(desiredVolume * 100));
-    ctx.stroke();
 
   }
-
 
   return container;
 
-  function getXcoordinate(){
-
+  function drawHorizontalLine(ctx, color, height, width){
+    ctx.strokeStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(getXCoordinate(0), getYCoordinate(Math.round(FIXED_HEIGHT - height * FIXED_HEIGHT)));
+    ctx.lineTo(getXCoordinate(width), getYCoordinate(Math.round(FIXED_HEIGHT - height * FIXED_HEIGHT)));
+    ctx.stroke();
+  }
+  function drawVerticalLine(ctx, color, height, width){
+    ctx.strokeStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(getXCoordinate(width), 0);
+    ctx.lineTo(getXCoordinate(width), getYCoordinate(Math.round(height)));
+    ctx.stroke();
   }
 
-  function getYcoordinate(){
+  function getXCoordinate(width){
+    var X_OFFSET = 50;
+    return width + X_OFFSET;
+  }
 
+  function getYCoordinate(height){
+    var Y_OFFSET = 10;
+    return height + Y_OFFSET;
   }
 
 }
