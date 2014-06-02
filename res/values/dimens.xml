@@ -11,5 +11,14 @@
     <!-- The distance between the bottom of a card and the bottom of a tips-view, adjusted so
          that the baseline of the text is 40px from the bottom of the card. -->
     <dimen name="tip_margin_bottom">33px</dimen>
+    
+    <!-- AndroidPlot dimensions. -->
+    <dimen name="pie_segment_label_font_size">10dp</dimen>
+    <dimen name="title_font_size">20dp</dimen>
+    <dimen name="domain_label_font_size">13dp</dimen>
+    <dimen name="range_label_font_size">13dp</dimen>
+    <dimen name="range_tick_label_font_size">15dp</dimen>
+    <dimen name="domain_tick_label_font_size">15dp</dimen>
+    <dimen name="legend_text_font_size">20dp</dimen>
 
 </resources>
