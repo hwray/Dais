@@ -33,7 +33,7 @@
 
       function printDateInfo(dateTime){
         if (!dateTime){
-          return '05/' + Math.floor(Math.random() * (31)) + '/14';
+          return '05/' + Math.floor(Math.random() * (30)) + 1 + '/14';
         }
         var stringInfo = '';
         stringInfo += dateTime.split(' ')[0];
