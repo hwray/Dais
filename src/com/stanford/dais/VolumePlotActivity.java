@@ -23,19 +23,15 @@ public class VolumePlotActivity extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
- 
+        
+        Globals g = (Globals) getApplication(); 
+        
         setContentView(R.layout.activity_volume_plot);
  
         // initialize our XYPlot reference:
         plot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
  
-        // Create an array of y-values to plot:
-        Number[] series1Numbers = {1, 8, 5, 2, 7, 4};
-        Number[] series2Numbers = {4, 6, 3, 8, 2, 10};
- 
-        // Turn the above array into XYSeries:
-        XYSeries series1 = new SimpleXYSeries(
-                Arrays.asList(series1Numbers),          // SimpleXYSeries takes a List so turn our array into a List
+        XYSeries series1 = new SimpleXYSeries(g.pres.decibels,          
                 SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, // Y_VALS_ONLY means use the element index as the x value
                 "Series1");                             // Set the display title of the series
  
