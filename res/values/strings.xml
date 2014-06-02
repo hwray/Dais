@@ -12,7 +12,8 @@
     
     <string name="view_data">View Data</string>
     <string name="no_data">No Recent Data</string>
-    <string name="heatmap">Visual Heatmap</string>    
+    <string name="heatmap">Visual Heatmap</string>   
+    <string name="volume_plot">Voice Volume Plot</string>    
     
     <string name="get_left_heading">Look at left side of room and tap</string>
     <string name="get_right_heading">Look at right side of room and tap</string>

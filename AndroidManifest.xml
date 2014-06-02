@@ -38,6 +38,11 @@
                 android:name="com.google.android.glass.VoiceTrigger"
                 android:resource="@xml/my_voice_trigger" />
         </activity>
+		<activity
+            android:name="com.stanford.dais.PrepPresentationActivity"
+            android:immersive="true"
+            android:label="@string/prep_presentation" >
+        </activity>
         <activity
             android:name="com.stanford.dais.ViewDataActivity"
             android:immersive="true"
@@ -49,9 +54,9 @@
             android:label="@string/heatmap" >
         </activity>
         <activity
-            android:name="com.stanford.dais.PrepPresentationActivity"
+            android:name="com.stanford.dais.VolumePlotActivity"
             android:immersive="true"
-            android:label="@string/prep_presentation" >
+            android:label="@string/volume_plot" >
         </activity>
     </application>
 

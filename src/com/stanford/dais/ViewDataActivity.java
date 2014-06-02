@@ -63,6 +63,8 @@ public class ViewDataActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if (position == 0) {
 					startActivity(new Intent(ViewDataActivity.this, HeatmapActivity.class)); 
+				} else if (position == 2) {
+					startActivity(new Intent(ViewDataActivity.this, VolumePlotActivity.class)); 
 				}
 			}
         	
