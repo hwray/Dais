@@ -44,6 +44,11 @@
             android:label="@string/view_data" >
         </activity>
         <activity
+            android:name="com.stanford.dais.HeatmapActivity"
+            android:immersive="true"
+            android:label="@string/heatmap" >
+        </activity>
+        <activity
             android:name="com.stanford.dais.PrepPresentationActivity"
             android:immersive="true"
             android:label="@string/prep_presentation" >

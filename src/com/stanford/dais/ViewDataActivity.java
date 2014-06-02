@@ -5,15 +5,21 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import com.google.android.glass.app.Card;
+import com.google.android.glass.touchpad.Gesture;
+import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.widget.CardScrollAdapter;
 import com.google.android.glass.widget.CardScrollView;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,12 +28,17 @@ public class ViewDataActivity extends Activity {
 	
 	private Globals g; 
 	private View mainView; 
+	
+	private CardScrollView mCardsView; 
+	private CustomCardScrollAdapter mCardAdapter; 
 		
     private int NUM_CARDS = 3; 
     private ArrayList<Card> mCards; 
     
 	private final int NUM_SEGMENTS = 25; 
 	private ArrayList<Double> segmentProportions; 
+	
+	private GestureDetector mGestureDetector; 
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +52,21 @@ public class ViewDataActivity extends Activity {
         	initializeCard(i); 
         }
 
-        CardScrollView cardsView = new CardScrollView(this);
-        CustomCardScrollAdapter csAdapter = new CustomCardScrollAdapter();
-        cardsView.setAdapter(csAdapter);
-        cardsView.activate();
-        setContentView(cardsView);
+        mCardsView = new CardScrollView(this);
+        mCardAdapter = new CustomCardScrollAdapter();
+        mCardsView.setAdapter(mCardAdapter);
+        mCardsView.activate();
+        setContentView(mCardsView);
+        
+        mCardsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				if (position == 0) {
+					startActivity(new Intent(ViewDataActivity.this, HeatmapActivity.class)); 
+				}
+			}
+        	
+		});
     }
     
     
@@ -62,43 +83,7 @@ public class ViewDataActivity extends Activity {
     	}
     	mCards.add(newCard); 
     }
-    
-    
-    private void initializeVisualHeatmap() {
-        Collections.sort(g.pres.headings, new Comparator<Float>() {
-            @Override
-            public int compare(Float heading1, Float heading2)
-            {
-            	if (heading1 < heading2) {
-            		return -1; 
-            	} else if (heading1 > heading2) {
-            		return 1;
-            	} else {
-            		return 0; 
-            	}
-            }
-        });
-                
-        countOrientationsBySegment(); 
-        
-    	LayoutInflater inflater = LayoutInflater.from(this);
-        View v = inflater.inflate(R.layout.activity_view_data, null, false);
-        
-        for (int i = 0; i < NUM_SEGMENTS; i++) {
-        	colorHeatmapSegment(i, v);
-        }
-        
-        //cardViews.add(v); 
-    }
-    
-    
-    private void initializeSecond() {
-    	LayoutInflater inflater = LayoutInflater.from(this);
-        View v = inflater.inflate(R.layout.activity_main, null, false);
-        
-        //cardViews.add(v); 
-    }
-    
+
     
     private void countOrientationsBySegment() {
     	ArrayList<Integer> segmentCounters = new ArrayList<Integer>(); 
@@ -144,6 +129,7 @@ public class ViewDataActivity extends Activity {
         
         rectView.setBackgroundColor(color);
     }
+    
     
     private class CustomCardScrollAdapter extends CardScrollAdapter {
 

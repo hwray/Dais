@@ -7,7 +7,7 @@
     android:layout_marginLeft="@dimen/card_margin"
     android:layout_marginRight="@dimen/card_margin"
     android:keepScreenOn="true" 
-    tools:context="com.stanford.dais.ViewDataActivity"
+    tools:context="com.stanford.dais.HeatmapActivity"
     >
     
 	<View
