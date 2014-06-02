@@ -48,7 +48,8 @@ public class PrepPresentationActivity extends Activity {
 	
 	private boolean mLiveFeedbackMode; 
 
-	private static final int MUMBLE_TIME_THRESHOLD = 20; 
+	private static final double MUMBLE_DIFFERENCE = 3;
+	private static final int MUMBLE_TIME_THRESHOLD = 30; 
     private static final float GAZE_TIME_THRESHOLD = 100.0f; 
     private static final float GAZE_PITCH_THRESHOLD = 10.0f;
     
@@ -492,7 +493,7 @@ public class PrepPresentationActivity extends Activity {
     			sendUIMessage(6); 
             } else if (type.equals("speech")) {
                 g.pres.mSpeechVolume = mAverageDecibels; 
-                g.pres.mMumbleVolume = (g.pres.mFloorVolume + g.pres.mSpeechVolume) / (double)2; 
+                g.pres.mMumbleVolume = g.pres.mSpeechVolume - MUMBLE_DIFFERENCE; 
     			sendUIMessage(7); 
             }
             			
@@ -606,11 +607,11 @@ public class PrepPresentationActivity extends Activity {
             
             g.pres.decibels.add(db); 
             
-            if (db > (g.pres.mFloorVolume - 3) && db < g.pres.mMumbleVolume) {
+            if (db > (g.pres.mFloorVolume) && db < g.pres.mMumbleVolume) {
             	mNumMumbleSamples++; 
             	
             } else {
-            	mNumMumbleSamples -= 5; 
+            	mNumMumbleSamples = 0; 
             	sendUIMessage(5); 
             }
             
