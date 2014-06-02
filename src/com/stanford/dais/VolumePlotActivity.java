@@ -86,9 +86,6 @@ public class VolumePlotActivity extends Activity
                                       0,SizeLayoutType.FILL);
         gw.setSize(sm);
 
-        // get a handle to the layout manager:
-        LayoutManager lm = plot.getLayoutManager();
-
         // position the upper left corner of gw in the upper left corner of the space 
         // controlled by lm.
         gw.position(0, XLayoutStyle.ABSOLUTE_FROM_LEFT, 0, YLayoutStyle.ABSOLUTE_FROM_TOP);

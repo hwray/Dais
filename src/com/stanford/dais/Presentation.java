@@ -33,7 +33,6 @@ public class Presentation {
 
 	public ArrayList<Double> decibels; 
 	
-	// Real Talk
 	public ArrayList<Float> headings; 
 	
 	public Presentation(String identifier) {
