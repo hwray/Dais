@@ -7,7 +7,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="main_subtitle">Presentation Analytics</string>
-    <string name="prep_presentation">Prep Presentation</string>
+    <string name="prep_presentation">Live Feedback</string>
     <string name="prep_no_feedback">No Feedback</string>
     
     <string name="view_data">View Data</string>

@@ -132,7 +132,7 @@ public class MainActivity extends Activity {
     /**
      * Starts the prep presentation activity,
      * but does not finish this activity so that the splash screen
-     * reappears when the user is done viewing data. 
+     * reappears when the user is done presenting.  
      */
     private void startPrepPresentation(boolean liveFeedbackMode) {
     	Intent intent = new Intent(this, PrepPresentationActivity.class); 
