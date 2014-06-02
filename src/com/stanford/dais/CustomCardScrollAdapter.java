@@ -10,9 +10,9 @@ import com.google.android.glass.widget.CardScrollAdapter;
 
 class CustomCardScrollAdapter extends CardScrollAdapter {
 
-    private List<RelativeLayout> mViews;
+    private List<View> mViews;
 
-    public CustomCardScrollAdapter(List<RelativeLayout> views) {
+    public CustomCardScrollAdapter(List<View> views) {
         mViews = views;
     }
 

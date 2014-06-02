@@ -4,27 +4,59 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import com.google.android.glass.app.Card;
+import com.google.android.glass.widget.CardScrollView;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class ViewDataActivity extends Activity {
 	
 	private Globals g; 
 	private View mainView; 
-	
+		
+    private int NUM_CARDS = 2; 
+    private ArrayList<View> cardViews; 
+    
 	private final int NUM_SEGMENTS = 25; 
 	private ArrayList<Double> segmentProportions; 
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_data);
+        //setContentView(R.layout.activity_view_data);
         
         g = (Globals) getApplication(); 
         
+        cardViews = new ArrayList<View>(); 
+        for (int i = 0; i < NUM_CARDS; i++) {
+        	initializeCardView(i); 
+        }
+
+        CardScrollView cardsView = new CardScrollView(this);
+        CustomCardScrollAdapter csAdapter = new CustomCardScrollAdapter(cardViews);
+        cardsView.setAdapter(csAdapter);
+        cardsView.activate();
+        setContentView(cardsView);
+    }
+    
+    
+    private void initializeCardView(int index) {
+    	if (index == 1) {
+    		initializeVisualHeatmap(); 
+    	} else if (index == 2) {
+    		initializeSecond(); 
+    	}
+    }
+    
+    
+    private void initializeVisualHeatmap() {
         Collections.sort(g.pres.headings, new Comparator<Float>() {
             @Override
             public int compare(Float heading1, Float heading2)
@@ -38,14 +70,23 @@ public class ViewDataActivity extends Activity {
             	}
             }
         });
-        
-       
                 
         countOrientationsBySegment(); 
         
+    	LayoutInflater inflater = LayoutInflater.from(this);
+        View v = inflater.inflate(R.layout.activity_view_data, null, false);
+        
         for (int i = 0; i < NUM_SEGMENTS; i++) {
-        	colorHeatmapSegment(i);
+        	colorHeatmapSegment(i, v);
         }
+        
+        cardViews.add(v); 
+    }
+    
+    
+    private void initializeSecond() {
+    	LayoutInflater inflater = LayoutInflater.from(this);
+        View v = inflater.inflate(R.layout.activity_view_data, null, false);
     }
     
     
@@ -81,11 +122,11 @@ public class ViewDataActivity extends Activity {
     }
     
 
-    private void colorHeatmapSegment(int num) {
+    private void colorHeatmapSegment(int num, View v) {
     	int idNum = num + 1; 
     	String id = "heat_rect_" + idNum; 
         int resID = this.getResources().getIdentifier(id, "id", getPackageName());
-        View rectView = this.findViewById(resID); 
+        View rectView = v.findViewById(resID); 
         
         int redColor = (int)(segmentProportions.get(num) * (float)1000); 
         
