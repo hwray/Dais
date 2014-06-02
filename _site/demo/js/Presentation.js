@@ -31,6 +31,8 @@ function Presentation(pres) {
   this.mMumbleVolume = pres.mMumbleVolume;
   this.mSpeechVolume = pres.mSpeechVolume;
   this.numSteps = pres.numSteps;
+  this.mStartTime = pres.mStartTime;
+  this.mEndTime = pres.mEndTime;
 }
 
 Presentation.prototype.displayHeatMap = function() {
@@ -80,6 +82,63 @@ Presentation.prototype.displayHeatMap = function() {
     container.appendChild(heatBar);
   }
   return container;
+}
+
+Presentation.prototype.displayVolumeMap = function(){
+  var container = document.createElement("canvas");
+  container.style.background = 'white';
+
+  var decibels = this.decibels;
+  var loudest = Math.max.apply(Math, decibels);
+  var softest = Math.min.apply(Math, decibels);
+  var range = Math.abs(loudest - softest);
+
+  var numDecibels = decibels.length;
+
+  var backgroundVolume = Math.abs((this.mFloorVolume - softest) / range);
+  var desiredVolume = Math.abs((this.mSpeechVolume - softest) / range);
+  var mumbleVolume = Math.abs((this.mMumbleVolume - softest) / range);
+
+  if(container.getContext){
+    var ctx = container.getContext('2d');
+    ctx.strokeStyle = '#f00';
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+
+    for(var i=0; i< numDecibels; i++){
+      var ratio = Math.abs((decibels[i] - softest) / range);
+      var height = ratio*100;
+      ctx.lineTo(i, Math.round(height));
+    }
+    ctx.stroke();
+
+    // background volume 
+    ctx.strokeStyle = '#0f0';
+    ctx.beginPath();
+    ctx.moveTo(0, Math.round(backgroundVolume * 100));
+    ctx.lineTo(numDecibels, Math.round(backgroundVolume * 100));
+    ctx.stroke();
+
+    // desired volume 
+    ctx.strokeStyle = '#00f';
+    ctx.beginPath();
+    ctx.moveTo(0, Math.round(desiredVolume * 100));
+    ctx.lineTo(numDecibels, Math.round(desiredVolume * 100));
+    ctx.stroke();
+
+  }
+
+
+  return container;
+
+  function getXcoordinate(){
+
+  }
+
+  function getYcoordinate(){
+
+  }
+
 }
 
 Presentation.prototype.getTotalLeft = function() {

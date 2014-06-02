@@ -15,7 +15,12 @@
       }
 
       for(var i=0; i<presentations.length; i++){
+        /* Add head map */
         heatMapContainer.appendChild(presentations[i].displayHeatMap());
+        var hm = heatMapContainer.lastChild;
+        hm.className = hm.className + ' col-sm-4';
+        /* Add volume visualization */
+        heatMapContainer.appendChild(presentations[i].displayVolumeMap());
         var hm = heatMapContainer.lastChild;
         hm.className = hm.className + ' col-sm-4';
       }
