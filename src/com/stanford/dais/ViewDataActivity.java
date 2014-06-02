@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import com.google.android.glass.app.Card;
+import com.google.android.glass.widget.CardScrollAdapter;
 import com.google.android.glass.widget.CardScrollView;
 
 import android.app.Activity;
@@ -12,6 +13,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,8 +23,8 @@ public class ViewDataActivity extends Activity {
 	private Globals g; 
 	private View mainView; 
 		
-    private int NUM_CARDS = 2; 
-    private ArrayList<View> cardViews; 
+    private int NUM_CARDS = 3; 
+    private ArrayList<Card> mCards; 
     
 	private final int NUM_SEGMENTS = 25; 
 	private ArrayList<Double> segmentProportions; 
@@ -34,25 +36,31 @@ public class ViewDataActivity extends Activity {
         
         g = (Globals) getApplication(); 
         
-        cardViews = new ArrayList<View>(); 
+        mCards = new ArrayList<Card>(); 
         for (int i = 0; i < NUM_CARDS; i++) {
-        	initializeCardView(i); 
+        	initializeCard(i); 
         }
 
         CardScrollView cardsView = new CardScrollView(this);
-        CustomCardScrollAdapter csAdapter = new CustomCardScrollAdapter(cardViews);
+        CustomCardScrollAdapter csAdapter = new CustomCardScrollAdapter();
         cardsView.setAdapter(csAdapter);
         cardsView.activate();
         setContentView(cardsView);
     }
     
     
-    private void initializeCardView(int index) {
-    	if (index == 1) {
-    		initializeVisualHeatmap(); 
+    private void initializeCard(int index) {
+    	Card newCard = new Card(this); 
+    	if (index == 0) {
+        	newCard.setText("Visual Spread Heatmap"); 
+    		//initializeVisualHeatmap(); 
+    	} else if (index == 1) {
+        	newCard.setText("Visual Spread Over Time");
+    		//initializeSecond(); 
     	} else if (index == 2) {
-    		initializeSecond(); 
+    		newCard.setText("Voice Volume Over Time");
     	}
+    	mCards.add(newCard); 
     }
     
     
@@ -80,13 +88,15 @@ public class ViewDataActivity extends Activity {
         	colorHeatmapSegment(i, v);
         }
         
-        cardViews.add(v); 
+        //cardViews.add(v); 
     }
     
     
     private void initializeSecond() {
     	LayoutInflater inflater = LayoutInflater.from(this);
-        View v = inflater.inflate(R.layout.activity_view_data, null, false);
+        View v = inflater.inflate(R.layout.activity_main, null, false);
+        
+        //cardViews.add(v); 
     }
     
     
@@ -133,5 +143,46 @@ public class ViewDataActivity extends Activity {
         int color = Color.rgb(redColor, 0, 0); 
         
         rectView.setBackgroundColor(color);
+    }
+    
+    private class CustomCardScrollAdapter extends CardScrollAdapter {
+
+        @Override
+        public int getPosition(Object item) {
+            return mCards.indexOf(item);
+        }
+
+        @Override
+        public int getCount() {
+            return mCards.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mCards.get(position);
+        }
+
+        /**
+         * Returns the amount of view types.
+         */
+        @Override
+        public int getViewTypeCount() {
+            return Card.getViewTypeCount();
+        }
+
+        /**
+         * Returns the view type of this card so the system can figure out
+         * if it can be recycled.
+         */
+        @Override
+        public int getItemViewType(int position){
+            return mCards.get(position).getItemViewType();
+        }
+
+        @Override
+        public View getView(int position, View convertView,
+                ViewGroup parent) {
+            return  mCards.get(position).getView(convertView, parent);
+        }
     }
 }
