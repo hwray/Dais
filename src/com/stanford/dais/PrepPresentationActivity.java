@@ -611,7 +611,7 @@ public class PrepPresentationActivity extends Activity {
             	mNumMumbleSamples++; 
             	
             } else {
-            	mNumMumbleSamples = 0; 
+            	mNumMumbleSamples -= 10; 
             	sendUIMessage(5); 
             }
             
