@@ -68,9 +68,7 @@ public class PrepPresentationActivity extends Activity {
     
     private SensorManager mSensorManager; 
     private LocationManager mLocationManager; 
-    
-    private StepDetector mStepDetector; 
-    
+        
     private GestureDetector mGestureDetector;
     
     private int mBufferSize;
@@ -153,26 +151,6 @@ public class PrepPresentationActivity extends Activity {
         mOrientationManager.addOnChangedListener(mCompassListener);
         mOrientationManager.start();
         
-        mStepDetector = new StepDetector(); 
-        mStepDetector.setSensitivity(2.96f);
-        mStepDetector.addStepListener(new StepListener() {
-        	public void onStep() {
-        		g.pres.numSteps++; 
-        		// mHeadingView.setText("Steps: " + g.pres.numSteps);
-        	}
-        	
-        	public void passValue() {
-        		
-        	}
-        }); 
-        
-        Sensor mSensor = mSensorManager.getDefaultSensor(
-                Sensor.TYPE_ACCELEROMETER /*| 
-                Sensor.TYPE_MAGNETIC_FIELD | 
-                Sensor.TYPE_ORIENTATION*/);
-        mSensorManager.registerListener(mStepDetector,
-                mSensor,
-                SensorManager.SENSOR_DELAY_FASTEST);
         
         // Compute the minimum required audio buffer size and allocate the buffer.
         mBufferSize = AudioRecord.getMinBufferSize(SAMPLING_RATE, AudioFormat.CHANNEL_IN_MONO,
