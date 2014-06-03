@@ -1,60 +1,146 @@
 <!DOCTYPE html>
-<html>
+<!-- This site was created in Webflow. http://www.webflow.com-->
+<!-- Last Published: Tue Jun 03 2014 23:17:18 GMT+0000 (UTC) -->
+<html data-wf-site="538e11412eeec7566840242a">
 <head>
-  <meta charset=utf-8 />
-  <title>  Dais |  Dais </title>
-  <link rel="stylesheet" href="/Dais/css/bootstrap.min.css" />
+  <meta charset="utf-8">
+  <title>Dais Glass</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Webflow">
+  <link rel="stylesheet" type="text/css" href="css/normalize.css">
+  <link rel="stylesheet" type="text/css" href="css/webflow.css">
+  <link rel="stylesheet" type="text/css" href="css/daisglass.webflow.css">
+  <link href='assets/DaisPresentation.pdf' />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+  <script>
+    WebFont.load({
+      google: {
+        families: ["Montserrat:400,700","PT Sans:400,400italic,700,700italic","Bitter:400,700,400italic"]
+      }
+    });
+  </script>
+  <script type="text/javascript" src="js/modernizr.js"></script>
+  <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+  <link rel="apple-touch-icon" href="img/webclip-slate.png">
 </head>
-<body> 
-    <div class="navbar navbar-default">
-  <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand" href=".">Dais</a>
+<body>
+  <div class="section hero title">
+    <div>
+      <div class="w-container">
+        <div class="w-row">
+          <div class="w-col w-col-4"></div>
+          <div class="w-col w-col-8 nav-column"><a class="nav-link" href="#demo">What is it?</a><a class="nav-link" href="#features">Features</a><a class="nav-link" href="#paper">Research Paper</a><a class="nav-link" href="#team">meet the team</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="w-container herocontainer">
+      <div class="w-row">
+        <div class="w-col w-col-6 titlediv">
+          <h1 class="title">Dais</h1>
+          <p class="hero-subtitle">Get down to the basics and start giving more effective presentations.</p>
+        </div>
+        <div class="w-col w-col-6">
+          <div class="titlebuttondiv center"><a class="button titlebutton" href="#demo">Check it out</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="navbar-collapse collapse navbar-responsive-collapse">
-    <ul class="nav navbar-nav">
-      <li class="active"><a href=".">Home</a></li>
-      <li><a href="brainstorming.html">Brainstorming</a></li>
-      <li><a href="needfinding.html">Needfinding</a></li>
-      <li><a href="prototyping.html">Prototyping</a></li>
-    </ul>
+  <div class="section demo" id='demo'>
+    <h2 class="center">Dais Glass Demo Video</h2>
+    <div class="w-container">
+      <div class="w-embed w-video" style="padding-top: 56.20608899297424%;">
+        <iframe class="embedly-embed" src="https://cdn.embedly.com/widgets/media.html?src=https%3A%2F%2Fwww.youtube.com%2Fembed%2Fx7TjLtVKj3k%3Ffeature%3Doembed&amp;url=http%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dx7TjLtVKj3k&amp;image=http%3A%2F%2Fi1.ytimg.com%2Fvi%2Fx7TjLtVKj3k%2Fhqdefault.jpg&amp;key=c4e54deccf4d4ec997a64902e9a30300&amp;type=text%2Fhtml&amp;schema=youtube"
+        scrolling="no" frameborder="0" allowfullscreen=""></iframe>
+      </div>
+    </div>
   </div>
-</div>
-
-  <div class="container-fluid">
- 
-    <section class="content">
-	<div class='row-fluid'>
-		<div class='col-sm-6 text-center'>
-			<img src='img/daisSquare.png' />
-		</div>
-		<div class='col-sm-6'>
-		<p> We present Dais, a Glass presentation aid and analytics application. <br /><br />
-
-		<em>The Opportunity</em><br />
-		The oral presentation continues to be a crucial medium of communication and learning; however, it's effectiveness is highly subject to execution. Poor execution is well documented - marriage to one's presentation slides, reading off a script, lack of subtle interaction with the audience such as eye contact, and no or too much pacing. As such, workarounds to poor presentation are well known - notecards, timers - but each pose obstacles of their own. Because the ideal oral presentation is known, and the breakdowns of current workarounds are well-observed, there is huge opportunity for a tech rehaul. 
-
-		<br /><br />
-
-		<em>The Solution</em><br />	
-		We hope to build a Google Glass application to aid people in giving effective presentation. The solution would be include a few key features — presentation remote with timer, and slide advancing, note cards, dynamic eye-contact spread assistance, and recording for post-presentation diagnostics and feedback.
-
-		<br /><br />Our work is currently hosted on <a href="http://github.com/hwray/Dais">Github</a>.</p>
-
-		<h3>The Team</h3>
-		<ul>
-			<li>Elaine Zhou</li>
-			<li>Harrison Wray</li>
-			<li>Brian Lam </li>
-			<li>Adrian Rodriguez</li>
-		</ul>
-		</div>
-	</div>
-</section>
- 
+  <div>
+    <div class="about section" id='features'>
+      <div class="w-container">
+        <div class="center">
+          <div class="w-row">
+            <div class="w-col w-col-6">
+              <h2 class="center">Live Presentation Feedback</h2>
+              <img class="glassimage" src="img/glassFeedback.png" alt="538e42db3e38af55685cebbf_glassFeedback.png">
+              <ul class="w-list-unstyled center bullets">
+                <li>Instantaneous feedback during presentation</li>
+                <li>Cues to direct attention based on eye gaze</li>
+                <li>Prompts to speak up when volume levels fall</li>
+              </ul>
+            </div>
+            <div class="w-col w-col-6">
+              <h2 class="center">Post-Presentation Analytics</h2>
+              <img class="analyticsimage" src="img/webapp.png" alt="538e42eb0d4653e90dd5b31a_webapp.png">
+              <ul class="w-list-unstyled center bullets">
+                <li>Aggregate all presentations in one dashboard</li>
+                <li>Visualize quality of&nbsp;gaze spread</li>
+                <li>See&nbsp;levels of&nbsp;voice&nbsp;volume</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+  <div class="section grey" id='paper'>
+    <div class="w-container">
+      <div>
+        <h2 class="center">Research Paper &amp;&nbsp;Presentation</h2>
+      </div>
+      <div>
+        <p>This report details Dais: a live presentation aid and analytics tool for the Google Glass and web. Our team’s aim is to help oral presenters improve in two ways: (1) displaying live feedback indicating quality of visual spread and speaking volume,
+          and (2) offering a post- presentation analytics and visualization platform for this data. Dais improves on existing presentation aid tools by leveraging the inherent strengths of wearable devices: the ability to analyze a constant stream of
+          real-world sensor data to interpret and classify user behaviors. The ultimate goal of Dais is to reinforce good presentation techniques and to turn these behaviors into intuitive habits, eliminating the need for users to rely on Dais or other
+          external aids while presenting.</p>
+        <div class="w-row">
+          <div class="w-col w-col-6 center"><a class="button" href="assets/daisFinalPaper.pdf">Research Paper</a>
+          </div>
+          <div class="w-col w-col-6 center"><a class="button" href="assets/DaisPresentation.pdf">Presentation Slide Deck</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="section" id='team'>
+    <div class="w-container">
+      <h2 class="center">Meet the Team</h2>
+    </div>
+    <div>
+      <div>
+        <div class="w-container">
+          <div>
+            <div class="w-row">
+              <div class="w-col w-col-3 center">
+                <img src="img/hwray.png" alt="538e2f55b1c1f6e70d6f9668_hwray.png">
+                <h4>Harrison</h4>
+                <p>hwray@stanford.edu</p>
+              </div>
+              <div class="w-col w-col-3 center">
+                <img src="img/elainecircle.png" alt="538e2f723e38af55685cea1b_elainecircle.png">
+                <h4><span>Elaine</span></h4>
+                <p>ezhou@stanford.edu</p>
+              </div>
+              <div class="w-col w-col-3 center">
+                <img src="img/brian.png" alt="538e2f7f3e38af55685cea1d_brian.png">
+                <h4>Brian</h4>
+                <p>brianlam@stanford.edu</p>
+              </div>
+              <div class="w-col w-col-3 center">
+                <img src="img/adrian.png" alt="538e2f89b1c1f6e70d6f966e_adrian.png">
+                <h4>Adrian</h4>
+                <p>arod2016@stanford.edu</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <script type="text/javascript" src="js/webflow.js"></script>
+  <!--[if lte IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif]-->
 </body>
+</html>
