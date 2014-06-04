@@ -2,38 +2,44 @@
     $('#disconnect').click(logout);
   });
 
-  function showPresentations(){
-    getPresentationsByUsername(username, function(presentations) { 
+  function showPresentations(name){
+    var informationContainer = document.createElement('div');
+    informationContainer.className = 'row-fluid pull-middle';
+    informationContainer.innerHTML = '<h1>Your Recent Presentations</h1>';
+    document.body.appendChild(informationContainer);
+
+
+    getPresentationsByUsername(name, function(presentations) { 
 
       var heatMapContainer = document.createElement("div");
       heatMapContainer.className = 'row-fluid';
       heatMapContainer.className = 'heatmap-container';
       document.body.appendChild(heatMapContainer);
 
-      if(presentations.length == 0){
-        heatMapContainer.innerHTML ='<p>Sorry, no presentation data found!</p>';
-      }
-
       for(var i=0; i<presentations.length; i++){
         var info = document.createElement("div");
-        info.className = 'pres-info col-sm-4';
+        info.className = 'pres-info col-sm-2';
         info.innerHTML = '<h4 class="pull-right">'+ printDateInfo(presentations[i].mEndTime) + '</h4>';
         heatMapContainer.appendChild(info);
 
         /* Add heat map */
         heatMapContainer.appendChild(presentations[i].displayHeatMap());
         var hm = heatMapContainer.lastChild;
-        hm.className = hm.className + ' col-sm-4';
+        hm.className = hm.className + ' col-sm-5';
         /* Add volume visualization */
         var vm = document.createElement("div");
-        vm.className = 'volume-map col-sm-4';
+        vm.className = 'volume-map col-sm-5';
         vm.appendChild(presentations[i].displayVolumeMap());
         heatMapContainer.appendChild(vm);
       }
 
+      if(presentations.length == 0){
+        heatMapContainer.innerHTML ='<p>Sorry, no presentation data found!</p>';
+      }
+
       function printDateInfo(dateTime){
         if (!dateTime){
-          return '05/' + Math.floor(Math.random() * (30)) + '/14';
+          return 'no date recorded';
         }
         var stringInfo = '';
         stringInfo += dateTime.split(' ')[0];
@@ -56,8 +62,11 @@
    */
   function loginFinishedCallback(authResult) {
     if (authResult) {
+
       if (authResult['error'] == undefined){
-        toggleElement('signin-button'); // Hide the sign-in button after successfully signing in the user.
+        toggleElement('signin-button');
+        toggleElement('sample');
+        toggleElement('signin'); // Hide the signin button after successfully signing in the user.
         gapi.client.load('plus','v1', loadProfile);  // Trigger request to get the email address.
       } else {
         console.log('An error occurred');
@@ -96,7 +105,7 @@
     username = email_array[0];
 
     displayProfile(profile);
-    showPresentations();
+    showPresentations(username);
   }
 
   /**
@@ -134,7 +143,7 @@
         success: function(result) {
           console.log('revoke response: ' + result);
           toggleElement('profile');
-          toggleElement('signin-button');
+          toggleElement('signin');
         },
         error: function(e) {
           console.log(e);

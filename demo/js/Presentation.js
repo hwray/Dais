@@ -94,6 +94,7 @@ Presentation.prototype.displayVolumeMap = function(){
   var container = document.createElement("canvas");
   container.style.background = 'white';
   container.height = 200;
+  container.width = 400;
 
   var decibels = this.decibels;
   var loudest = Math.max.apply(Math, decibels);
