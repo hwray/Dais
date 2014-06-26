@@ -19,8 +19,8 @@ Dais
 
 ####After your presentation, view analytics about your performance using Glass or the companion web app
 
-* A heatmap of your head orientation summarizes your visual spread across the audience, and shows you where to focus more next time.
-* A line graph of your speech volume over time shows how well you maintained your ideal speech volume. 
+* A heatmap of your head orientation summarizes your **visual spread across the audience**, and shows you where to focus more next time.
+* A line graph of your speech volume over time shows how well you maintained your **ideal speech volume**. 
 
 ####As an open-source app, Dais is ripe for extensions and enhancements: 
 
