@@ -16,6 +16,7 @@ Dais
 * **Tap and say the first sentence of your presentation.** This is used to determine the desired speech volume for your presentation. 
 
 ![Look left](http://i102.photobucket.com/albums/m93/hwray/lookleftsmall_zps38ace988.png)
+
 ![Speech calibration](http://i102.photobucket.com/albums/m93/hwray/calibratingspeechsmall_zps6bc25010.png)
 
 ====
@@ -23,15 +24,19 @@ Dais
 ####During your presentation, Dais provides (optional) live micro-feedback to help improve your performance.
 
 * A **left/right arrow** indicates that you haven't looked at the other side of the audience in a while. 
-* An **up arrow** indicates that you've been looking down at your notes for too long, and should look back up at the audience. 
 
 ![Look right](http://i102.photobucket.com/albums/m93/hwray/rightarrowsmall_zps87d0d01e.png)
+
+* An **up arrow** indicates that you've been looking down at your notes for too long, and should look back up at the audience. 
+
 ![Look up](http://i102.photobucket.com/albums/m93/hwray/uparrowsmall_zpsc839ae47.png)
 
 * A **"Face forward!"** prompt indicates that you're facing away from the audience. Useful for slide-based presentations, where it can be tempting to turn your back on your audience and read off your slides. 
-* A **"Speak up!"** prompt indicates that the volume of your voice has fallen too far below the ideal speech threshold for your presentation. In other words: stop mumbling. 
 
 ![Face forward](http://i102.photobucket.com/albums/m93/hwray/faceforwardsmall_zpsd8721a75.png)
+
+* A **"Speak up!"** prompt indicates that the volume of your voice has fallen too far below the ideal speech threshold for your presentation. In other words: stop mumbling. 
+
 ![Speak up](http://i102.photobucket.com/albums/m93/hwray/speakupsmall_zpsd3a91616.png)
 
 * The rest of the time, Dais maintains a blank screen and stays out of your way. 
