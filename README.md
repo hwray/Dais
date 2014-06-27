@@ -38,12 +38,16 @@ Dais
 
 ####After your presentation, view analytics about your performance using Glass or the companion web app
 
-* A heatmap of your head orientation summarizes your **visual spread across the audience**, and shows you where to focus next time.
+#####A heatmap of your head orientation summarizes your **visual spread across the audience**, and shows you where to focus next time.
 
+ ![Visual spread heatmap](http://s102.photobucket.com/user/hwray/media/heatmap2edit_zps08dc335b.png.html?sort=3&o=14)
  
+ * This presenter over-focused on the middle of the audience,  
 
-* A line graph of your speech volume over time shows how well you maintained your **ideal speech volume**. 
+#####A line graph of your speech volume over time shows how well you maintained your **ideal speech volume**. 
+
+![Speech volume graph](http://i102.photobucket.com/albums/m93/hwray/audio3edit_zpsc2655733.png)
 
 ####As an open-source app, Dais is ripe for extensions and enhancements: 
 
-Dais uses example code from the GDK Compass and GDK Waveform examples. 
+Dais uses example code from the [GDK Compass](https://github.com/googleglass/gdk-compass-sample) and [GDK Waveform](https://github.com/googleglass/gdk-waveform-sample) samples. 
