@@ -1,14 +1,14 @@
 Dais
 ====
 
-###Live Presentation feedback and analytics for Google Glass.
+##Live Presentation feedback and analytics for Google Glass.
 
-####Helps you improve visual spread and maintain consistent speech volume. 
+###Helps you improve visual spread and maintain consistent speech volume. 
 
 ![Live feedback](http://hwray.github.io/Dais/img/glassFeedback.png)
 ![Analytics dashboard](http://hwray.github.io/Dais/img/webapp.png)
 
-####Before presenting, perform the simple calibration steps
+####Before presenting, perform the simple calibration steps.
 
 * **Tap while looking left and then right.** This stores compass headings which are used to define the boundaries of the audience. 
 * **Tap and say the first sentence of your presentation.** This is used to determine the desired speech volume for your presentation. 
@@ -16,7 +16,7 @@ Dais
 ![Look left](http://i102.photobucket.com/albums/m93/hwray/lookleftsmall_zps38ace988.png)
 ![Speech calibration](http://i102.photobucket.com/albums/m93/hwray/calibratingspeechsmall_zps6bc25010.png)
 
-####During your presentation, Dais provides (optional) live micro-feedback to help improve your performance
+####During your presentation, Dais provides (optional) live micro-feedback to help improve your performance.
 
 * A **left/right arrow** indicates that you haven't looked at the other side of the audience in a while. 
 * An **up arrow** indicates that you've been looking down at your notes for too long, and should look back up at the audience. 
@@ -32,7 +32,7 @@ Dais
 
 * The rest of the time, Dais maintains a blank screen and stays out of your way. 
 
-####After your presentation, view analytics about your performance using Glass or the companion web app
+####After your presentation, view analytics about your performance using Glass or the companion web app.
 
 #####A heatmap of your head orientation summarizes your **visual spread across the audience**, and shows you where to focus next time.
 
