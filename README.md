@@ -1,7 +1,7 @@
 Dais
 ====
 
-##Live Presentation feedback and analytics for Google Glass.
+##Live presentation feedback and analytics for Google Glass.
 
 ###Helps you improve visual spread and maintain consistent speech volume. 
 
