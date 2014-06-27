@@ -46,7 +46,7 @@ Dais
  
 * This presenter focused too much on the right side of the audience. 
 
-#####A line graph of your voice level over time shows how well you maintained your **ideal speech volume**. 
+#####A line graph of your voice level shows how well you maintained your **ideal speech volume**. 
 
 ![Speech volume graph](http://i102.photobucket.com/albums/m93/hwray/audio3edit_zpsc2655733.png)
 
