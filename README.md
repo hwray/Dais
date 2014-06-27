@@ -48,7 +48,7 @@ Dais
 
 #####A heatmap of your head orientation summarizes your **visual spread across the audience**, and shows you where to focus next time.
 
- ![Visual spread heatmap](http://i102.photobucket.com/albums/m93/hwray/heatmap1edit_zps9e1cb938.png)
+ ![Visual spread heatmap](http://i102.photobucket.com/albums/m93/hwray/heatmap1editsmall_zps7f8266cb.png)
  
 * This presenter focused too much on the right side of the audience. 
 
