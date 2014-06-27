@@ -40,11 +40,11 @@ Dais
 
 #####A heatmap of your head orientation summarizes your **visual spread across the audience**, and shows you where to focus next time.
 
- ![Visual spread heatmap](http://s102.photobucket.com/user/hwray/media/heatmap2edit_zps08dc335b.png.html?sort=3&o=14)
+ ![Visual spread heatmap](http://i102.photobucket.com/albums/m93/hwray/heatmap1edit_zps9e1cb938.png)
  
- * This presenter over-focused on the middle of the audience,  
+* This presenter focused too much on the right side of the audience. 
 
-#####A line graph of your speech volume over time shows how well you maintained your **ideal speech volume**. 
+#####A line graph of your voice level over time shows how well you maintained your **ideal speech volume**. 
 
 ![Speech volume graph](http://i102.photobucket.com/albums/m93/hwray/audio3edit_zpsc2655733.png)
 
