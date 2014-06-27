@@ -62,7 +62,7 @@ Dais
 
 ####As an open-source app, Dais is ripe for extensions and enhancements: 
 
-* Integrate a **pedometer to track presenter's footsteps.** Dais could tell presenters to move around more if they're standing too still, or tell them to plant for a moment if they're pacing around too much. 
+* Integrate a **pedometer to track presenter's footsteps.** Dais could tell presenters to move around more if they're standing too still, or tell them to plant their feet for a moment if they're pacing around too much. 
 * Add **gesture recognition** functionality using a **wrist-based wearable device** (like an [Android Wear](http://www.android.com/wear/) watch). Give users feedback on their hand/arm gestures and other body language. 
 
 ![Moto360](http://cdn4.mos.techradar.futurecdn.net//art/other/Onetimers/android-wear-moto-360-close-up-578-80.jpg)
