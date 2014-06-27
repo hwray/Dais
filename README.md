@@ -8,6 +8,8 @@ Dais
 ![Live feedback](http://hwray.github.io/Dais/img/glassFeedback.png)
 ![Analytics dashboard](http://hwray.github.io/Dais/img/webapp.png)
 
+====
+
 ####Before presenting, perform the simple calibration steps.
 
 * **Tap while looking left and then right.** This stores compass headings which are used to define the boundaries of the audience. 
@@ -15,6 +17,8 @@ Dais
 
 ![Look left](http://i102.photobucket.com/albums/m93/hwray/lookleftsmall_zps38ace988.png)
 ![Speech calibration](http://i102.photobucket.com/albums/m93/hwray/calibratingspeechsmall_zps6bc25010.png)
+
+====
 
 ####During your presentation, Dais provides (optional) live micro-feedback to help improve your performance.
 
@@ -32,6 +36,8 @@ Dais
 
 * The rest of the time, Dais maintains a blank screen and stays out of your way. 
 
+====
+
 ####After your presentation, view analytics about your performance using Glass or the companion web app.
 
 #####A heatmap of your head orientation summarizes your **visual spread across the audience**, and shows you where to focus next time.
@@ -45,6 +51,8 @@ Dais
 ![Speech volume graph](http://i102.photobucket.com/albums/m93/hwray/audio3edit_zpsc2655733.png)
 
 * This presenter started and ended their presentation with a strong voice, but dropped down to the "mumble threshold" during the middle. 
+
+====
 
 ####As an open-source app, Dais is ripe for extensions and enhancements: 
 
