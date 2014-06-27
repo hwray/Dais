@@ -13,9 +13,10 @@ Dais
 ####Before presenting, perform the simple calibration steps.
 
 * **Tap while looking left and then right.** This stores compass headings which are used to define the boundaries of the audience. 
-* **Tap and say the first sentence of your presentation.** This is used to determine the desired speech volume for your presentation. 
 
 ![Look left](http://i102.photobucket.com/albums/m93/hwray/lookleftsmall_zps38ace988.png)
+
+* **Tap and say the first sentence of your presentation.** This is used to determine the desired speech volume for your presentation. 
 
 ![Speech calibration](http://i102.photobucket.com/albums/m93/hwray/calibratingspeechsmall_zps6bc25010.png)
 
