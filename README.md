@@ -48,6 +48,8 @@ Dais
 
 ![Speech volume graph](http://i102.photobucket.com/albums/m93/hwray/audio3edit_zpsc2655733.png)
 
+* This presenter started and ended their presentation with a strong voice, but dropped down to the "mumble threshold" during the middle. 
+
 ####As an open-source app, Dais is ripe for extensions and enhancements: 
 
 Dais uses example code from the [GDK Compass](https://github.com/googleglass/gdk-compass-sample) and [GDK Waveform](https://github.com/googleglass/gdk-waveform-sample) samples. 
