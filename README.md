@@ -3,11 +3,15 @@ Dais
 
 ###Live Presentation feedback and analytics for Google Glass.
 
+####Helps you improve visual spread and maintain consistent speech volume. 
+
+![Live feedback](http://hwray.github.io/Dais/img/glassFeedback.png)
+![Analytics dashboard](http://hwray.github.io/Dais/img/webapp.png)
+
 ####Before presenting, perform the simple calibration steps
 
 * **Tap while looking left and then right.** This stores compass headings which are used to define the boundaries of the audience. 
 * **Tap and say the first sentence of your presentation.** This is used to determine the desired speech volume for your presentation. 
-* **Tap and remain silent to record background noise.** This is used to determine the floor decibel level of the room. 
 
 ####During your presentation, Dais provides (optional) live micro-feedback to help improve your performance
 
@@ -24,3 +28,4 @@ Dais
 
 ####As an open-source app, Dais is ripe for extensions and enhancements: 
 
+Dais uses example code from the GDK Compass and GDK Waveform examples. 
