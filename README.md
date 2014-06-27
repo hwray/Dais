@@ -10,7 +10,7 @@ Dais
 
 ====
 
-####Before presenting, perform the simple calibration steps.
+###Before presenting, perform the simple calibration steps.
 
 * **Tap while looking left and then right.** This stores compass headings which are used to define the boundaries of the audience. 
 
@@ -22,7 +22,7 @@ Dais
 
 ====
 
-####During your presentation, Dais provides (optional) live micro-feedback to help improve your performance.
+###During your presentation, Dais provides (optional) live micro-feedback to help improve your performance.
 
 * A **left/right arrow** indicates that you haven't looked at the other side of the audience in a while. 
 
@@ -44,15 +44,15 @@ Dais
 
 ====
 
-####After your presentation, view analytics about your performance using Glass or the companion web app.
+###After your presentation, view analytics about your performance using Glass or the companion web app.
 
-#####A heatmap of your head orientation summarizes your **visual spread across the audience**, and shows you where to focus next time.
+####A heatmap of your head orientation summarizes your **visual spread across the audience**, and shows you where to focus next time.
 
  ![Visual spread heatmap](http://i102.photobucket.com/albums/m93/hwray/heatmap1editsmall_zps7f8266cb.png)
  
 * This presenter focused too much on the right side of the audience. 
 
-#####A line graph of your voice level shows how well you maintained your **ideal speech volume**. 
+####A line graph of your voice level shows how well you maintained your **ideal speech volume**. 
 
 ![Speech volume graph](http://i102.photobucket.com/albums/m93/hwray/audio3edit_zpsc2655733.png)
 
@@ -60,10 +60,10 @@ Dais
 
 ====
 
-####As an open-source app, Dais is ripe for extensions and enhancements: 
+###As an open-source app, Dais is ripe for extensions and enhancements: 
 
 * Integrate a **pedometer to track presenter's footsteps.** Dais could tell presenters to move around more if they're standing too still, or tell them to plant their feet for a moment if they're pacing around too much. 
-* Add **gesture recognition** functionality using a **wrist-based wearable device** (like an [Android Wear](http://www.android.com/wear/) watch). Give users feedback on their hand/arm gestures and other body language. 
+* Add **gesture recognition** functionality using a **wrist-based wearable device** (like an [Android Wear](http://www.android.com/wear/) watch). Give users feedback on the frequency and variety of their hand/arm gestures, as well as other body language. 
 
 ![Moto360](http://cdn4.mos.techradar.futurecdn.net//art/other/Onetimers/android-wear-moto-360-close-up-578-80.jpg)
 
