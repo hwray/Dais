@@ -66,7 +66,7 @@ Dais
 * Implement **background speech recognition** to perform a variety of tasks: 
  * Provide users a **transcript** of their presentation. 
  * Give live feedback to **discourage presenters from using "filler words"** ("uh," "um," etc.). 
- * Give live feedback about presenters' **speech pace**, by analyzing their **words/syllables per minute**. 
+ * Give live feedback to presenters to **speak slower or faster,** by analyzing speech pace (words/syllables per minute). 
 * Add **gesture recognition** functionality using a **wrist-based wearable device** (like an [Android Wear](http://www.android.com/wear/) watch). Give users feedback on the frequency and variety of their hand/arm gestures, as well as other body language. 
 
 ![Moto360](http://cdn4.mos.techradar.futurecdn.net//art/other/Onetimers/android-wear-moto-360-close-up-578-80.jpg)
