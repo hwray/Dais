@@ -62,7 +62,7 @@ Dais
 
 ###As an open-source app, Dais is ripe for extensions and enhancements: 
 
-* Integrate a **pedometer to track presenter's footsteps.** Dais could tell presenters to move around more if they're standing too still, or tell them to plant their feet for a moment if they're pacing around too much. 
+* Integrate a **pedometer to track presenter's footsteps.** Dais could tell presenters to move around if they've been standing still too long, or tell them to plant their feet for a moment if they're pacing around too much. 
 * Implement **background speech recognition** to perform a variety of tasks: 
  * Provide users a **transcript** of their presentation. 
  * Give live feedback to **discourage presenters from using "filler words"** ("uh," "um," etc.). 
