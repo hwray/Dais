@@ -3,7 +3,7 @@ Dais
 
 ##Live presentation feedback and analytics for Google Glass.
 
-###Helps you improve visual spread, and maintain consistent speech volume and pace. 
+###Helps improve your visual spread, and maintain consistent speech volume and pace. 
 
 ![Live feedback](http://hwray.github.io/Dais/img/glassFeedback.png)
 ![Analytics dashboard](http://hwray.github.io/Dais/img/webapp.png)
